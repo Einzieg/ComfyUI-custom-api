@@ -14,8 +14,7 @@ Documentation = "https://github.com/Einzieg/ComfyUI-custom-api#readme"
 "Bug Tracker" = "https://github.com/Einzieg/ComfyUI-custom-api/issues"
 
 [tool.comfy]
-# Set this to the actual publisher ID created at https://registry.comfy.org.
-PublisherId = ""
+PublisherId = "einzieg"
 DisplayName = "ComfyUI Custom API"
 
 [tool.pytest.ini_options]

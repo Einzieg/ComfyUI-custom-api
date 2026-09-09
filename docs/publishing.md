@@ -22,6 +22,6 @@ Registry 是新版节点管理器的目录来源。需要在 [registry.comfy.org
 3. 在 GitHub Actions 中手动运行 **Publish to Comfy Registry**。工作流先运行测试、检查元数据，再发布当前 `main` 的版本。
 4. 检查 Registry 中的版本状态和实际搜索结果。提交成功与完成审核/索引是不同状态。
 
-当前 `PublisherId` 留空，Registry 发布尚未完成。后续发布需递增 `pyproject.toml` 的版本；已发布的版本号不可重复使用。
+发布者为 `einzieg`，Registry 首次发布正在进行。后续发布需递增 `pyproject.toml` 的版本；已发布的版本号不可重复使用。
 
 `.comfyignore` 排除测试及开发脚本。`.gitignore` 排除本地配置、密钥和 `.dev` 测试环境。官方流程详见 [Publishing Nodes](https://docs.comfy.org/registry/publishing)。
