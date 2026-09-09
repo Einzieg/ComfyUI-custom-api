@@ -132,3 +132,5 @@ Issues and pull requests for fixes, translations and request templates are welco
 ## License and credits
 
 The project and its original logo use the [MIT License](../LICENSE). Thanks to [ComfyUI](https://github.com/Comfy-Org/ComfyUI) and [LobeHub Icons](https://icons.lobehub.com/). Brand icons come from `@lobehub/icons-static-svg@1.95.0` with its MIT license retained. [Icon provenance](icons.md) · [Screenshot and asset notes](assets/README.md).
+
+Thanks also to the [LINUX DO](https://linux.do/) community for sharing knowledge and ideas.

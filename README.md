@@ -158,3 +158,5 @@ Windows 便携包通常使用 `python_embeded\python.exe`。已验证环境：Co
 ## 许可与致谢
 
 本项目及原创项目图标采用 [MIT License](LICENSE)。感谢 [ComfyUI](https://github.com/Comfy-Org/ComfyUI) 和 [LobeHub Icons](https://icons.lobehub.com/)。供应商品牌图标来自官方 `@lobehub/icons-static-svg@1.95.0`，保留其 MIT 许可；[图标来源](docs/icons.md) · [截图与素材说明](docs/assets/README.md)。
+
+同时感谢 [LINUX DO](https://linux.do/) 社区的交流与分享。
