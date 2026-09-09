@@ -1,0 +1,15 @@
+.dev/
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+data/
+dist/
+*.log
+node_modules/
+.env
+.env.*
+!.env.example
+secrets.json
+*.pem
+*.key

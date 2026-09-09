@@ -1,0 +1,133 @@
+{
+  "CustomAPIText": {
+    "display_name": "API Text / Vision",
+    "description": "Call a custom text or vision API. Credentials stay on the server.",
+    "inputs": {
+      "provider_id": {
+        "name": "Provider"
+      },
+      "model_id": {
+        "name": "Model"
+      },
+      "operation": {
+        "name": "Operation",
+        "options": {
+          "text": "Text",
+          "vision": "Vision"
+        }
+      },
+      "prompt": {
+        "name": "Prompt"
+      },
+      "parameters": {
+        "name": "Parameters JSON",
+        "tooltip": "Overrides template defaults. Node parameters take precedence."
+      },
+      "cache_mode": {
+        "name": "Result cache",
+        "options": {
+          "reuse": "Reuse previous result",
+          "refresh": "Request on every run"
+        }
+      },
+      "request_nonce": {
+        "name": "Request nonce",
+        "tooltip": "Change this value for a new API request. This is not a model seed."
+      },
+      "system": {
+        "name": "System prompt"
+      },
+      "image": {
+        "name": "Image"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Text"
+      },
+      "1": {
+        "name": "Response JSON"
+      },
+      "2": {
+        "name": "Metadata JSON"
+      }
+    }
+  },
+  "CustomAPIImage": {
+    "display_name": "API Image",
+    "description": "Generate or edit images using a custom API, preserving their original sizes.",
+    "inputs": {
+      "provider_id": {
+        "name": "Provider"
+      },
+      "model_id": {
+        "name": "Model"
+      },
+      "operation": {
+        "name": "Operation",
+        "options": {
+          "image": "Image generation",
+          "image_edit": "Image editing"
+        }
+      },
+      "prompt": {
+        "name": "Prompt"
+      },
+      "parameters": {
+        "name": "Parameters JSON",
+        "tooltip": "Overrides template defaults. Node parameters take precedence."
+      },
+      "cache_mode": {
+        "name": "Result cache",
+        "options": {
+          "reuse": "Reuse previous result",
+          "refresh": "Request on every run"
+        }
+      },
+      "request_nonce": {
+        "name": "Request nonce",
+        "tooltip": "Change this value for a new API request. This is not a model seed."
+      },
+      "image": {
+        "name": "Image"
+      },
+      "mask": {
+        "name": "Edit mask"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Images"
+      },
+      "1": {
+        "name": "Response JSON"
+      },
+      "2": {
+        "name": "Metadata JSON"
+      }
+    }
+  },
+  "CustomAPIParameter": {
+    "display_name": "API Parameter",
+    "description": "Build typed JSON parameters and combine them through node connections.",
+    "inputs": {
+      "name": {
+        "name": "Parameter name"
+      },
+      "value": {
+        "name": "Value"
+      },
+      "value_type": {
+        "name": "Value type"
+      },
+      "parameters": {
+        "name": "Parameters JSON"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Parameters JSON"
+      }
+    }
+  }
+}

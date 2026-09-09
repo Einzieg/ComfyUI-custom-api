@@ -1,0 +1,19 @@
+{
+  "1": {
+    "class_type": "CustomAPIImage",
+    "inputs": {
+      "provider_id": "",
+      "model_id": "",
+      "operation": "image",
+      "prompt": "A quiet mountain lake at sunrise, natural light.",
+      "parameters": "{}",
+      "cache_mode": "reuse",
+      "request_nonce": 0
+    },
+    "_meta": {"title": "API Image"}
+  },
+  "2": {
+    "class_type": "SaveImage",
+    "inputs": {"images": ["1", 0], "filename_prefix": "CustomAPI"}
+  }
+}

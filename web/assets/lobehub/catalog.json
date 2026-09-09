@@ -1,0 +1,1616 @@
+{
+  "package": "@lobehub/icons-static-svg",
+  "version": "1.95.0",
+  "icons": [
+    {
+      "id": "ace",
+      "name": "Ace",
+      "mono": true
+    },
+    {
+      "id": "adobe",
+      "name": "Adobe",
+      "mono": false
+    },
+    {
+      "id": "adobefirefly",
+      "name": "Adobefirefly",
+      "mono": false
+    },
+    {
+      "id": "agentvoice",
+      "name": "Agentvoice",
+      "mono": false
+    },
+    {
+      "id": "agnesai",
+      "name": "Agnesai",
+      "mono": true
+    },
+    {
+      "id": "agui",
+      "name": "Agui",
+      "mono": true
+    },
+    {
+      "id": "ai2",
+      "name": "Ai2",
+      "mono": false
+    },
+    {
+      "id": "ai21",
+      "name": "Ai21",
+      "mono": true
+    },
+    {
+      "id": "ai302",
+      "name": "Ai302",
+      "mono": false
+    },
+    {
+      "id": "ai360",
+      "name": "Ai360",
+      "mono": false
+    },
+    {
+      "id": "aihubmix",
+      "name": "Aihubmix",
+      "mono": false
+    },
+    {
+      "id": "aimass",
+      "name": "Aimass",
+      "mono": false
+    },
+    {
+      "id": "aionlabs",
+      "name": "Aionlabs",
+      "mono": false
+    },
+    {
+      "id": "airjelly",
+      "name": "Airjelly",
+      "mono": false
+    },
+    {
+      "id": "aistudio",
+      "name": "Aistudio",
+      "mono": true
+    },
+    {
+      "id": "akashchat",
+      "name": "Akashchat",
+      "mono": false
+    },
+    {
+      "id": "alephalpha",
+      "name": "Alephalpha",
+      "mono": true
+    },
+    {
+      "id": "alibaba",
+      "name": "Alibaba",
+      "mono": false
+    },
+    {
+      "id": "alibabacloud",
+      "name": "Alibaba Cloud",
+      "mono": false
+    },
+    {
+      "id": "amp",
+      "name": "Amp",
+      "mono": false
+    },
+    {
+      "id": "anspire",
+      "name": "Anspire",
+      "mono": false
+    },
+    {
+      "id": "antgroup",
+      "name": "Antgroup",
+      "mono": false
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic",
+      "mono": true
+    },
+    {
+      "id": "antigravity",
+      "name": "Antigravity",
+      "mono": false
+    },
+    {
+      "id": "anyscale",
+      "name": "Anyscale",
+      "mono": false
+    },
+    {
+      "id": "apertis",
+      "name": "Apertis",
+      "mono": false
+    },
+    {
+      "id": "apple",
+      "name": "Apple",
+      "mono": true
+    },
+    {
+      "id": "arcee",
+      "name": "Arcee",
+      "mono": false
+    },
+    {
+      "id": "askverdict",
+      "name": "Askverdict",
+      "mono": false
+    },
+    {
+      "id": "assemblyai",
+      "name": "Assemblyai",
+      "mono": false
+    },
+    {
+      "id": "atlascloud",
+      "name": "Atlascloud",
+      "mono": true
+    },
+    {
+      "id": "automatic",
+      "name": "Automatic",
+      "mono": false
+    },
+    {
+      "id": "aws",
+      "name": "Aws",
+      "mono": false
+    },
+    {
+      "id": "aya",
+      "name": "Aya",
+      "mono": false
+    },
+    {
+      "id": "azure",
+      "name": "Azure",
+      "mono": false
+    },
+    {
+      "id": "azureai",
+      "name": "Azureai",
+      "mono": false
+    },
+    {
+      "id": "baai",
+      "name": "Baai",
+      "mono": true
+    },
+    {
+      "id": "baichuan",
+      "name": "Baichuan",
+      "mono": false
+    },
+    {
+      "id": "baidu",
+      "name": "Baidu",
+      "mono": false
+    },
+    {
+      "id": "baiducloud",
+      "name": "Baiducloud",
+      "mono": false
+    },
+    {
+      "id": "bailian",
+      "name": "BaiLian 百炼",
+      "mono": false
+    },
+    {
+      "id": "baseten",
+      "name": "Baseten",
+      "mono": true
+    },
+    {
+      "id": "bedrock",
+      "name": "Bedrock",
+      "mono": false
+    },
+    {
+      "id": "bfl",
+      "name": "Bfl",
+      "mono": true
+    },
+    {
+      "id": "bilibili",
+      "name": "Bilibili",
+      "mono": false
+    },
+    {
+      "id": "bilibiliindex",
+      "name": "Bilibiliindex",
+      "mono": true
+    },
+    {
+      "id": "bing",
+      "name": "Bing",
+      "mono": false
+    },
+    {
+      "id": "bocha",
+      "name": "Bocha",
+      "mono": false
+    },
+    {
+      "id": "brave",
+      "name": "Brave",
+      "mono": false
+    },
+    {
+      "id": "briaai",
+      "name": "Briaai",
+      "mono": false
+    },
+    {
+      "id": "browserless",
+      "name": "Browserless",
+      "mono": true
+    },
+    {
+      "id": "burncloud",
+      "name": "Burncloud",
+      "mono": false
+    },
+    {
+      "id": "bytedance",
+      "name": "ByteDance",
+      "mono": false
+    },
+    {
+      "id": "capcut",
+      "name": "Capcut",
+      "mono": true
+    },
+    {
+      "id": "celestoai",
+      "name": "Celestoai",
+      "mono": false
+    },
+    {
+      "id": "centml",
+      "name": "Centml",
+      "mono": false
+    },
+    {
+      "id": "cerebras",
+      "name": "Cerebras",
+      "mono": false
+    },
+    {
+      "id": "chatglm",
+      "name": "ChatGLM",
+      "mono": false
+    },
+    {
+      "id": "cherrystudio",
+      "name": "Cherrystudio",
+      "mono": false
+    },
+    {
+      "id": "civitai",
+      "name": "Civitai",
+      "mono": false
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "mono": false
+    },
+    {
+      "id": "claudecode",
+      "name": "Claudecode",
+      "mono": false
+    },
+    {
+      "id": "cline",
+      "name": "Cline",
+      "mono": true
+    },
+    {
+      "id": "clipdrop",
+      "name": "Clipdrop",
+      "mono": true
+    },
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare",
+      "mono": false
+    },
+    {
+      "id": "codebuddy",
+      "name": "Codebuddy",
+      "mono": false
+    },
+    {
+      "id": "codeflicker",
+      "name": "Codeflicker",
+      "mono": false
+    },
+    {
+      "id": "codegeex",
+      "name": "Codegeex",
+      "mono": false
+    },
+    {
+      "id": "codex",
+      "name": "Codex",
+      "mono": false
+    },
+    {
+      "id": "cogvideo",
+      "name": "Cogvideo",
+      "mono": false
+    },
+    {
+      "id": "cogview",
+      "name": "Cogview",
+      "mono": false
+    },
+    {
+      "id": "cohere",
+      "name": "Cohere",
+      "mono": false
+    },
+    {
+      "id": "colab",
+      "name": "Colab",
+      "mono": false
+    },
+    {
+      "id": "cometapi",
+      "name": "Cometapi",
+      "mono": false
+    },
+    {
+      "id": "comfyui",
+      "name": "ComfyUI",
+      "mono": false
+    },
+    {
+      "id": "commanda",
+      "name": "Commanda",
+      "mono": false
+    },
+    {
+      "id": "copilot",
+      "name": "Copilot",
+      "mono": false
+    },
+    {
+      "id": "copilotkit",
+      "name": "Copilotkit",
+      "mono": false
+    },
+    {
+      "id": "coqui",
+      "name": "Coqui",
+      "mono": false
+    },
+    {
+      "id": "coze",
+      "name": "Coze",
+      "mono": true
+    },
+    {
+      "id": "crewai",
+      "name": "Crewai",
+      "mono": false
+    },
+    {
+      "id": "crusoe",
+      "name": "Crusoe",
+      "mono": false
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "mono": true
+    },
+    {
+      "id": "cybercut",
+      "name": "Cybercut",
+      "mono": true
+    },
+    {
+      "id": "dalle",
+      "name": "Dalle",
+      "mono": false
+    },
+    {
+      "id": "dbrx",
+      "name": "Dbrx",
+      "mono": false
+    },
+    {
+      "id": "deepai",
+      "name": "Deepai",
+      "mono": true
+    },
+    {
+      "id": "deepcogito",
+      "name": "Deepcogito",
+      "mono": false
+    },
+    {
+      "id": "deepinfra",
+      "name": "Deepinfra",
+      "mono": false
+    },
+    {
+      "id": "deepl",
+      "name": "Deepl",
+      "mono": false
+    },
+    {
+      "id": "deepmind",
+      "name": "Deepmind",
+      "mono": false
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "mono": false
+    },
+    {
+      "id": "devin",
+      "name": "Devin",
+      "mono": false
+    },
+    {
+      "id": "dify",
+      "name": "Dify",
+      "mono": false
+    },
+    {
+      "id": "doc2x",
+      "name": "Doc2x",
+      "mono": false
+    },
+    {
+      "id": "docsearch",
+      "name": "Docsearch",
+      "mono": false
+    },
+    {
+      "id": "dolphin",
+      "name": "Dolphin",
+      "mono": true
+    },
+    {
+      "id": "doubao",
+      "name": "Doubao 豆包",
+      "mono": false
+    },
+    {
+      "id": "dreammachine",
+      "name": "Dreammachine",
+      "mono": true
+    },
+    {
+      "id": "elevenlabs",
+      "name": "Elevenlabs",
+      "mono": true
+    },
+    {
+      "id": "elevenx",
+      "name": "Elevenx",
+      "mono": true
+    },
+    {
+      "id": "essentialai",
+      "name": "Essentialai",
+      "mono": false
+    },
+    {
+      "id": "exa",
+      "name": "Exa",
+      "mono": false
+    },
+    {
+      "id": "fal",
+      "name": "Fal",
+      "mono": false
+    },
+    {
+      "id": "fastgpt",
+      "name": "Fastgpt",
+      "mono": false
+    },
+    {
+      "id": "featherless",
+      "name": "Featherless",
+      "mono": false
+    },
+    {
+      "id": "figma",
+      "name": "Figma",
+      "mono": false
+    },
+    {
+      "id": "firecrawl",
+      "name": "Firecrawl",
+      "mono": false
+    },
+    {
+      "id": "fireworks",
+      "name": "Fireworks",
+      "mono": false
+    },
+    {
+      "id": "fishaudio",
+      "name": "Fishaudio",
+      "mono": true
+    },
+    {
+      "id": "flora",
+      "name": "Flora",
+      "mono": true
+    },
+    {
+      "id": "flowith",
+      "name": "Flowith",
+      "mono": true
+    },
+    {
+      "id": "flux",
+      "name": "FLUX",
+      "mono": true
+    },
+    {
+      "id": "friendli",
+      "name": "Friendli",
+      "mono": true
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "mono": false
+    },
+    {
+      "id": "geminicli",
+      "name": "Geminicli",
+      "mono": false
+    },
+    {
+      "id": "gemma",
+      "name": "Gemma",
+      "mono": false
+    },
+    {
+      "id": "giteeai",
+      "name": "Giteeai",
+      "mono": true
+    },
+    {
+      "id": "github",
+      "name": "Github",
+      "mono": true
+    },
+    {
+      "id": "githubcopilot",
+      "name": "Githubcopilot",
+      "mono": true
+    },
+    {
+      "id": "glama",
+      "name": "Glama",
+      "mono": true
+    },
+    {
+      "id": "glif",
+      "name": "Glif",
+      "mono": true
+    },
+    {
+      "id": "glmv",
+      "name": "Glmv",
+      "mono": false
+    },
+    {
+      "id": "google",
+      "name": "Google",
+      "mono": false
+    },
+    {
+      "id": "googlecloud",
+      "name": "Googlecloud",
+      "mono": false
+    },
+    {
+      "id": "goose",
+      "name": "Goose",
+      "mono": true
+    },
+    {
+      "id": "gradio",
+      "name": "Gradio",
+      "mono": false
+    },
+    {
+      "id": "greptile",
+      "name": "Greptile",
+      "mono": false
+    },
+    {
+      "id": "grok",
+      "name": "Grok",
+      "mono": true
+    },
+    {
+      "id": "groq",
+      "name": "Groq",
+      "mono": true
+    },
+    {
+      "id": "hailuo",
+      "name": "Hailuo 海螺",
+      "mono": false
+    },
+    {
+      "id": "haiper",
+      "name": "Haiper",
+      "mono": true
+    },
+    {
+      "id": "happyhorse",
+      "name": "Happyhorse",
+      "mono": true
+    },
+    {
+      "id": "hedra",
+      "name": "Hedra",
+      "mono": true
+    },
+    {
+      "id": "hermesagent",
+      "name": "Hermesagent",
+      "mono": true
+    },
+    {
+      "id": "higress",
+      "name": "Higress",
+      "mono": false
+    },
+    {
+      "id": "huawei",
+      "name": "Huawei",
+      "mono": false
+    },
+    {
+      "id": "huaweicloud",
+      "name": "Huaweicloud",
+      "mono": false
+    },
+    {
+      "id": "huggingface",
+      "name": "Hugging Face",
+      "mono": false
+    },
+    {
+      "id": "hunyuan",
+      "name": "Hunyuan 混元",
+      "mono": false
+    },
+    {
+      "id": "hyperbolic",
+      "name": "Hyperbolic",
+      "mono": false
+    },
+    {
+      "id": "ibm",
+      "name": "Ibm",
+      "mono": true
+    },
+    {
+      "id": "ideogram",
+      "name": "Ideogram",
+      "mono": true
+    },
+    {
+      "id": "iflytekcloud",
+      "name": "Iflytekcloud",
+      "mono": false
+    },
+    {
+      "id": "inception",
+      "name": "Inception",
+      "mono": true
+    },
+    {
+      "id": "inference",
+      "name": "Inference",
+      "mono": true
+    },
+    {
+      "id": "infermatic",
+      "name": "Infermatic",
+      "mono": false
+    },
+    {
+      "id": "infinigence",
+      "name": "Infinigence",
+      "mono": false
+    },
+    {
+      "id": "inflection",
+      "name": "Inflection",
+      "mono": true
+    },
+    {
+      "id": "internlm",
+      "name": "Internlm",
+      "mono": false
+    },
+    {
+      "id": "jimeng",
+      "name": "Jimeng 即梦",
+      "mono": false
+    },
+    {
+      "id": "jina",
+      "name": "Jina",
+      "mono": true
+    },
+    {
+      "id": "junie",
+      "name": "Junie",
+      "mono": false
+    },
+    {
+      "id": "kagi",
+      "name": "Kagi",
+      "mono": true
+    },
+    {
+      "id": "kilocode",
+      "name": "Kilocode",
+      "mono": true
+    },
+    {
+      "id": "kimi",
+      "name": "Kimi",
+      "mono": false
+    },
+    {
+      "id": "kiro",
+      "name": "Kiro",
+      "mono": false
+    },
+    {
+      "id": "kling",
+      "name": "Kling 可灵",
+      "mono": false
+    },
+    {
+      "id": "kluster",
+      "name": "Kluster",
+      "mono": false
+    },
+    {
+      "id": "kolors",
+      "name": "Kolors",
+      "mono": false
+    },
+    {
+      "id": "krea",
+      "name": "Krea",
+      "mono": true
+    },
+    {
+      "id": "kwaikat",
+      "name": "Kwaikat",
+      "mono": true
+    },
+    {
+      "id": "kwaipilot",
+      "name": "Kwaipilot",
+      "mono": false
+    },
+    {
+      "id": "lambda",
+      "name": "Lambda",
+      "mono": true
+    },
+    {
+      "id": "langchain",
+      "name": "Langchain",
+      "mono": false
+    },
+    {
+      "id": "langfuse",
+      "name": "Langfuse",
+      "mono": false
+    },
+    {
+      "id": "langgraph",
+      "name": "Langgraph",
+      "mono": false
+    },
+    {
+      "id": "langsmith",
+      "name": "Langsmith",
+      "mono": false
+    },
+    {
+      "id": "leptonai",
+      "name": "Leptonai",
+      "mono": false
+    },
+    {
+      "id": "lg",
+      "name": "Lg",
+      "mono": false
+    },
+    {
+      "id": "lightricks",
+      "name": "Lightricks",
+      "mono": true
+    },
+    {
+      "id": "liquid",
+      "name": "Liquid",
+      "mono": true
+    },
+    {
+      "id": "livekit",
+      "name": "Livekit",
+      "mono": false
+    },
+    {
+      "id": "llamaindex",
+      "name": "Llamaindex",
+      "mono": false
+    },
+    {
+      "id": "llava",
+      "name": "Llava",
+      "mono": false
+    },
+    {
+      "id": "llmapi",
+      "name": "Llmapi",
+      "mono": false
+    },
+    {
+      "id": "lmstudio",
+      "name": "LM Studio",
+      "mono": true
+    },
+    {
+      "id": "lobehub",
+      "name": "LobeHub",
+      "mono": false
+    },
+    {
+      "id": "longcat",
+      "name": "Longcat",
+      "mono": false
+    },
+    {
+      "id": "lovable",
+      "name": "Lovable",
+      "mono": false
+    },
+    {
+      "id": "lovart",
+      "name": "Lovart",
+      "mono": true
+    },
+    {
+      "id": "luma",
+      "name": "Luma",
+      "mono": false
+    },
+    {
+      "id": "magic",
+      "name": "Magic",
+      "mono": true
+    },
+    {
+      "id": "make",
+      "name": "Make",
+      "mono": false
+    },
+    {
+      "id": "manus",
+      "name": "Manus",
+      "mono": true
+    },
+    {
+      "id": "mastra",
+      "name": "Mastra",
+      "mono": true
+    },
+    {
+      "id": "mcp",
+      "name": "Mcp",
+      "mono": true
+    },
+    {
+      "id": "mcpso",
+      "name": "Mcpso",
+      "mono": false
+    },
+    {
+      "id": "menlo",
+      "name": "Menlo",
+      "mono": false
+    },
+    {
+      "id": "meshy",
+      "name": "Meshy",
+      "mono": false
+    },
+    {
+      "id": "meta",
+      "name": "Meta",
+      "mono": false
+    },
+    {
+      "id": "metaai",
+      "name": "Metaai",
+      "mono": false
+    },
+    {
+      "id": "metagpt",
+      "name": "Metagpt",
+      "mono": true
+    },
+    {
+      "id": "microsoft",
+      "name": "Microsoft",
+      "mono": false
+    },
+    {
+      "id": "midjourney",
+      "name": "Midjourney",
+      "mono": true
+    },
+    {
+      "id": "minimax",
+      "name": "MiniMax",
+      "mono": false
+    },
+    {
+      "id": "mistral",
+      "name": "Mistral",
+      "mono": false
+    },
+    {
+      "id": "modelscope",
+      "name": "Modelscope",
+      "mono": false
+    },
+    {
+      "id": "monica",
+      "name": "Monica",
+      "mono": false
+    },
+    {
+      "id": "moonshot",
+      "name": "Moonshot AI",
+      "mono": true
+    },
+    {
+      "id": "morph",
+      "name": "Morph",
+      "mono": false
+    },
+    {
+      "id": "moxt",
+      "name": "Moxt",
+      "mono": false
+    },
+    {
+      "id": "myshell",
+      "name": "Myshell",
+      "mono": false
+    },
+    {
+      "id": "n8n",
+      "name": "N8n",
+      "mono": false
+    },
+    {
+      "id": "nanobanana",
+      "name": "Nanobanana",
+      "mono": false
+    },
+    {
+      "id": "nebius",
+      "name": "Nebius",
+      "mono": true
+    },
+    {
+      "id": "newapi",
+      "name": "Newapi",
+      "mono": false
+    },
+    {
+      "id": "notebooklm",
+      "name": "Notebooklm",
+      "mono": true
+    },
+    {
+      "id": "notion",
+      "name": "Notion",
+      "mono": true
+    },
+    {
+      "id": "nousresearch",
+      "name": "Nousresearch",
+      "mono": true
+    },
+    {
+      "id": "nova",
+      "name": "Nova",
+      "mono": false
+    },
+    {
+      "id": "novelai",
+      "name": "Novelai",
+      "mono": true
+    },
+    {
+      "id": "novita",
+      "name": "Novita",
+      "mono": false
+    },
+    {
+      "id": "nplcloud",
+      "name": "Nplcloud",
+      "mono": false
+    },
+    {
+      "id": "nvidia",
+      "name": "Nvidia",
+      "mono": false
+    },
+    {
+      "id": "obsidian",
+      "name": "Obsidian",
+      "mono": false
+    },
+    {
+      "id": "ollama",
+      "name": "Ollama",
+      "mono": true
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "mono": true
+    },
+    {
+      "id": "openchat",
+      "name": "Openchat",
+      "mono": false
+    },
+    {
+      "id": "openclaw",
+      "name": "Openclaw",
+      "mono": false
+    },
+    {
+      "id": "opencode",
+      "name": "Opencode",
+      "mono": true
+    },
+    {
+      "id": "openhands",
+      "name": "Openhands",
+      "mono": false
+    },
+    {
+      "id": "openhuman",
+      "name": "Openhuman",
+      "mono": true
+    },
+    {
+      "id": "openrouter",
+      "name": "OpenRouter",
+      "mono": false
+    },
+    {
+      "id": "openwebui",
+      "name": "Openwebui",
+      "mono": true
+    },
+    {
+      "id": "palm",
+      "name": "Palm",
+      "mono": false
+    },
+    {
+      "id": "parasail",
+      "name": "Parasail",
+      "mono": true
+    },
+    {
+      "id": "perplexity",
+      "name": "Perplexity",
+      "mono": false
+    },
+    {
+      "id": "phidata",
+      "name": "Phidata",
+      "mono": false
+    },
+    {
+      "id": "phind",
+      "name": "Phind",
+      "mono": true
+    },
+    {
+      "id": "pi",
+      "name": "Pi",
+      "mono": true
+    },
+    {
+      "id": "pika",
+      "name": "Pika",
+      "mono": true
+    },
+    {
+      "id": "pixverse",
+      "name": "Pixverse",
+      "mono": false
+    },
+    {
+      "id": "player2",
+      "name": "Player2",
+      "mono": false
+    },
+    {
+      "id": "poe",
+      "name": "Poe",
+      "mono": false
+    },
+    {
+      "id": "pollinations",
+      "name": "Pollinations",
+      "mono": true
+    },
+    {
+      "id": "poolside",
+      "name": "Poolside",
+      "mono": false
+    },
+    {
+      "id": "ppio",
+      "name": "Ppio",
+      "mono": false
+    },
+    {
+      "id": "prunaai",
+      "name": "Prunaai",
+      "mono": false
+    },
+    {
+      "id": "pydanticai",
+      "name": "Pydanticai",
+      "mono": false
+    },
+    {
+      "id": "qingyan",
+      "name": "Qingyan",
+      "mono": false
+    },
+    {
+      "id": "qiniu",
+      "name": "Qiniu",
+      "mono": false
+    },
+    {
+      "id": "qoder",
+      "name": "Qoder",
+      "mono": false
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen 通义千问",
+      "mono": false
+    },
+    {
+      "id": "railway",
+      "name": "Railway",
+      "mono": true
+    },
+    {
+      "id": "recraft",
+      "name": "Recraft",
+      "mono": true
+    },
+    {
+      "id": "relace",
+      "name": "Relace",
+      "mono": true
+    },
+    {
+      "id": "replicate",
+      "name": "Replicate",
+      "mono": true
+    },
+    {
+      "id": "replit",
+      "name": "Replit",
+      "mono": false
+    },
+    {
+      "id": "reve",
+      "name": "Reve",
+      "mono": true
+    },
+    {
+      "id": "roocode",
+      "name": "Roocode",
+      "mono": true
+    },
+    {
+      "id": "rsshub",
+      "name": "Rsshub",
+      "mono": false
+    },
+    {
+      "id": "runway",
+      "name": "Runway",
+      "mono": true
+    },
+    {
+      "id": "rwkv",
+      "name": "Rwkv",
+      "mono": false
+    },
+    {
+      "id": "sambanova",
+      "name": "Sambanova",
+      "mono": false
+    },
+    {
+      "id": "search1api",
+      "name": "Search1api",
+      "mono": false
+    },
+    {
+      "id": "searchapi",
+      "name": "Searchapi",
+      "mono": true
+    },
+    {
+      "id": "searxng",
+      "name": "Searxng",
+      "mono": false
+    },
+    {
+      "id": "sensenova",
+      "name": "Sensenova",
+      "mono": false
+    },
+    {
+      "id": "siliconcloud",
+      "name": "SiliconFlow 硅基流动",
+      "mono": false
+    },
+    {
+      "id": "sillytavern",
+      "name": "Sillytavern",
+      "mono": false
+    },
+    {
+      "id": "skywork",
+      "name": "Skywork",
+      "mono": false
+    },
+    {
+      "id": "slock",
+      "name": "Slock",
+      "mono": true
+    },
+    {
+      "id": "smithery",
+      "name": "Smithery",
+      "mono": false
+    },
+    {
+      "id": "snowflake",
+      "name": "Snowflake",
+      "mono": false
+    },
+    {
+      "id": "sophnet",
+      "name": "Sophnet",
+      "mono": false
+    },
+    {
+      "id": "sora",
+      "name": "Sora",
+      "mono": false
+    },
+    {
+      "id": "spark",
+      "name": "Spark",
+      "mono": false
+    },
+    {
+      "id": "speedai",
+      "name": "Speedai",
+      "mono": false
+    },
+    {
+      "id": "stability",
+      "name": "Stability AI",
+      "mono": false
+    },
+    {
+      "id": "statecloud",
+      "name": "Statecloud",
+      "mono": false
+    },
+    {
+      "id": "stepfun",
+      "name": "StepFun 阶跃星辰",
+      "mono": false
+    },
+    {
+      "id": "straico",
+      "name": "Straico",
+      "mono": false
+    },
+    {
+      "id": "streamlake",
+      "name": "Streamlake",
+      "mono": false
+    },
+    {
+      "id": "submodel",
+      "name": "Submodel",
+      "mono": false
+    },
+    {
+      "id": "suno",
+      "name": "Suno",
+      "mono": true
+    },
+    {
+      "id": "sync",
+      "name": "Sync",
+      "mono": true
+    },
+    {
+      "id": "targon",
+      "name": "Targon",
+      "mono": false
+    },
+    {
+      "id": "tavily",
+      "name": "Tavily",
+      "mono": false
+    },
+    {
+      "id": "tencent",
+      "name": "Tencent 腾讯",
+      "mono": false
+    },
+    {
+      "id": "tencentcloud",
+      "name": "Tencentcloud",
+      "mono": false
+    },
+    {
+      "id": "tiangong",
+      "name": "Tiangong",
+      "mono": false
+    },
+    {
+      "id": "tii",
+      "name": "Tii",
+      "mono": false
+    },
+    {
+      "id": "together",
+      "name": "Together",
+      "mono": false
+    },
+    {
+      "id": "topazlabs",
+      "name": "Topazlabs",
+      "mono": true
+    },
+    {
+      "id": "trae",
+      "name": "Trae",
+      "mono": false
+    },
+    {
+      "id": "tripo",
+      "name": "Tripo",
+      "mono": false
+    },
+    {
+      "id": "turix",
+      "name": "Turix",
+      "mono": true
+    },
+    {
+      "id": "udio",
+      "name": "Udio",
+      "mono": false
+    },
+    {
+      "id": "unsloth",
+      "name": "Unsloth",
+      "mono": false
+    },
+    {
+      "id": "unstructured",
+      "name": "Unstructured",
+      "mono": false
+    },
+    {
+      "id": "upstage",
+      "name": "Upstage",
+      "mono": false
+    },
+    {
+      "id": "v0",
+      "name": "V0",
+      "mono": true
+    },
+    {
+      "id": "vectorizerai",
+      "name": "Vectorizerai",
+      "mono": true
+    },
+    {
+      "id": "venice",
+      "name": "Venice",
+      "mono": false
+    },
+    {
+      "id": "vercel",
+      "name": "Vercel",
+      "mono": true
+    },
+    {
+      "id": "vertexai",
+      "name": "Vertexai",
+      "mono": false
+    },
+    {
+      "id": "vidu",
+      "name": "Vidu",
+      "mono": false
+    },
+    {
+      "id": "viggle",
+      "name": "Viggle",
+      "mono": true
+    },
+    {
+      "id": "vllm",
+      "name": "Vllm",
+      "mono": false
+    },
+    {
+      "id": "volcengine",
+      "name": "Volcengine 火山引擎",
+      "mono": false
+    },
+    {
+      "id": "voyage",
+      "name": "Voyage",
+      "mono": false
+    },
+    {
+      "id": "wenxin",
+      "name": "Wenxin",
+      "mono": false
+    },
+    {
+      "id": "windsurf",
+      "name": "Windsurf",
+      "mono": true
+    },
+    {
+      "id": "workersai",
+      "name": "Workersai",
+      "mono": false
+    },
+    {
+      "id": "worldrouter",
+      "name": "Worldrouter",
+      "mono": true
+    },
+    {
+      "id": "xai",
+      "name": "xAI",
+      "mono": true
+    },
+    {
+      "id": "xiaomimimo",
+      "name": "Xiaomimimo",
+      "mono": true
+    },
+    {
+      "id": "xinference",
+      "name": "Xinference",
+      "mono": false
+    },
+    {
+      "id": "xpay",
+      "name": "Xpay",
+      "mono": false
+    },
+    {
+      "id": "xuanyuan",
+      "name": "Xuanyuan",
+      "mono": false
+    },
+    {
+      "id": "yandex",
+      "name": "Yandex",
+      "mono": true
+    },
+    {
+      "id": "yi",
+      "name": "Yi",
+      "mono": false
+    },
+    {
+      "id": "youmind",
+      "name": "Youmind",
+      "mono": true
+    },
+    {
+      "id": "yuanbao",
+      "name": "Yuanbao",
+      "mono": false
+    },
+    {
+      "id": "zai",
+      "name": "Zai",
+      "mono": true
+    },
+    {
+      "id": "zapier",
+      "name": "Zapier",
+      "mono": false
+    },
+    {
+      "id": "zeabur",
+      "name": "Zeabur",
+      "mono": false
+    },
+    {
+      "id": "zencoder",
+      "name": "Zencoder",
+      "mono": false
+    },
+    {
+      "id": "zenmux",
+      "name": "Zenmux",
+      "mono": true
+    },
+    {
+      "id": "zeroone",
+      "name": "Zeroone",
+      "mono": false
+    },
+    {
+      "id": "zhipu",
+      "name": "Zhipu 智谱",
+      "mono": false
+    }
+  ]
+}

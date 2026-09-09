@@ -1,0 +1,53 @@
+name: Publish to Comfy Registry
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: comfy-registry-publish
+  cancel-in-progress: false
+
+jobs:
+  checks:
+    uses: ./.github/workflows/test.yml
+  publish:
+    needs: checks
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.13"
+      - name: Verify publishing configuration
+        env:
+          REGISTRY_ACCESS_TOKEN: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (-not $env:REGISTRY_ACCESS_TOKEN) { throw 'Set the REGISTRY_ACCESS_TOKEN repository secret first.' }
+          @'
+          import pathlib, tomllib
+          config = tomllib.loads(pathlib.Path('pyproject.toml').read_text(encoding='utf-8'))
+          if not config['tool']['comfy']['PublisherId'].strip():
+              raise SystemExit('Set PublisherId to your registered Comfy Registry publisher ID first.')
+          '@ | python -
+          if ($LASTEXITCODE -ne 0) { throw 'Registry metadata validation failed' }
+      - name: Install Comfy CLI
+        run: |
+          $ErrorActionPreference = 'Stop'
+          python -m pip install comfy-cli
+          if ($LASTEXITCODE -ne 0) { throw 'Comfy CLI installation failed' }
+      - name: Publish current version
+        env:
+          REGISTRY_ACCESS_TOKEN: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          comfy --skip-prompt --no-enable-telemetry node publish --token $env:REGISTRY_ACCESS_TOKEN
+          if ($LASTEXITCODE -ne 0) { throw 'Registry publication failed' }

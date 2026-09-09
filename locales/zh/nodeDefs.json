@@ -1,0 +1,133 @@
+{
+  "CustomAPIText": {
+    "display_name": "API 文本 / 识图",
+    "description": "调用自定义文本或识图 API，密钥由服务器管理。",
+    "inputs": {
+      "provider_id": {
+        "name": "供应商"
+      },
+      "model_id": {
+        "name": "模型"
+      },
+      "operation": {
+        "name": "操作类型",
+        "options": {
+          "text": "文本",
+          "vision": "识图"
+        }
+      },
+      "prompt": {
+        "name": "提示词"
+      },
+      "parameters": {
+        "name": "参数 JSON",
+        "tooltip": "覆盖模板的默认值，节点内设置的参数优先。"
+      },
+      "cache_mode": {
+        "name": "结果缓存",
+        "options": {
+          "reuse": "复用已有结果",
+          "refresh": "每次运行重新请求"
+        }
+      },
+      "request_nonce": {
+        "name": "请求编号",
+        "tooltip": "修改编号可发起新请求；不是模型随机种子。"
+      },
+      "system": {
+        "name": "系统提示词"
+      },
+      "image": {
+        "name": "输入图片"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "文本"
+      },
+      "1": {
+        "name": "响应 JSON"
+      },
+      "2": {
+        "name": "调用信息 JSON"
+      }
+    }
+  },
+  "CustomAPIImage": {
+    "display_name": "API 图像",
+    "description": "调用自定义生图或图像编辑 API，输出图片列表并保留原始尺寸。",
+    "inputs": {
+      "provider_id": {
+        "name": "供应商"
+      },
+      "model_id": {
+        "name": "模型"
+      },
+      "operation": {
+        "name": "操作类型",
+        "options": {
+          "image": "图像生成",
+          "image_edit": "图像编辑"
+        }
+      },
+      "prompt": {
+        "name": "提示词"
+      },
+      "parameters": {
+        "name": "参数 JSON",
+        "tooltip": "覆盖模板的默认值，节点内设置的参数优先。"
+      },
+      "cache_mode": {
+        "name": "结果缓存",
+        "options": {
+          "reuse": "复用已有结果",
+          "refresh": "每次运行重新请求"
+        }
+      },
+      "request_nonce": {
+        "name": "请求编号",
+        "tooltip": "修改编号可发起新请求；不是模型随机种子。"
+      },
+      "image": {
+        "name": "输入图片"
+      },
+      "mask": {
+        "name": "编辑遮罩"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图片"
+      },
+      "1": {
+        "name": "响应 JSON"
+      },
+      "2": {
+        "name": "调用信息 JSON"
+      }
+    }
+  },
+  "CustomAPIParameter": {
+    "display_name": "API 参数",
+    "description": "构建带类型的 JSON 参数，可通过连线组合多个参数。",
+    "inputs": {
+      "name": {
+        "name": "参数名称"
+      },
+      "value": {
+        "name": "参数值"
+      },
+      "value_type": {
+        "name": "值类型"
+      },
+      "parameters": {
+        "name": "参数 JSON"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "参数 JSON"
+      }
+    }
+  }
+}

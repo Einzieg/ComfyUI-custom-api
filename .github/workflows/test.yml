@@ -1,0 +1,51 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      COMFYUI_CUSTOM_API_DIR: ${{ runner.temp }}/custom-api-tests
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: "22"
+      - name: Install test dependencies
+        run: |
+          $ErrorActionPreference = 'Stop'
+          python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+          if ($LASTEXITCODE -ne 0) { throw 'PyTorch installation failed' }
+          python -m pip install -r requirements.txt pytest
+          if ($LASTEXITCODE -ne 0) { throw 'Test dependency installation failed' }
+      - name: Backend tests
+        run: |
+          $ErrorActionPreference = 'Stop'
+          python -m pytest -q
+          if ($LASTEXITCODE -ne 0) { throw 'Backend tests failed' }
+      - name: Frontend tests
+        run: |
+          $ErrorActionPreference = 'Stop'
+          node --test tests/frontend.test.mjs
+          if ($LASTEXITCODE -ne 0) { throw 'Frontend tests failed' }
+      - name: Build installation archive
+        run: |
+          $ErrorActionPreference = 'Stop'
+          python scripts/package.py
+          if ($LASTEXITCODE -ne 0) { throw 'Packaging failed' }

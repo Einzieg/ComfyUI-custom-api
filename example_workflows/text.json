@@ -1,0 +1,16 @@
+{
+  "1": {
+    "class_type": "CustomAPIText",
+    "inputs": {
+      "provider_id": "",
+      "model_id": "",
+      "operation": "text",
+      "prompt": "请帮我写一段简洁的图片生成提示词。",
+      "system": "",
+      "parameters": "{}",
+      "cache_mode": "reuse",
+      "request_nonce": 0
+    },
+    "_meta": {"title": "API Text / Vision"}
+  }
+}

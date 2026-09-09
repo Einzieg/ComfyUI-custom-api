@@ -1,0 +1,10 @@
+{
+  "CustomAPI_Language": {
+    "name": "Language",
+    "options": {
+      "auto": "Follow ComfyUI",
+      "en": "English",
+      "zh": "简体中文"
+    }
+  }
+}
