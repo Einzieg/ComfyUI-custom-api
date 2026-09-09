@@ -59,7 +59,7 @@ Search the local icon library or match icons from provider names automatically.
 
 Search for **`comfyui-custom-api`** or **`ComfyUI Custom API`**.
 
-- [Comfy Registry](https://registry.comfy.org/nodes/comfyui-custom-api): published and returned by the official search API. Version `0.2.0` is currently pending platform review.
+- [Comfy Registry](https://registry.comfy.org/nodes/comfyui-custom-api): listed; installable versions depend on platform review.
 - Legacy Manager catalog: [inclusion PR #3258](https://github.com/Comfy-Org/ComfyUI-Manager/pull/3258) awaits merging.
 
 If the catalog has not refreshed or installation is unavailable, use Git or the release ZIP. [Publishing status →](publishing.md)
@@ -118,7 +118,7 @@ Images connect to `PreviewImage` or `SaveImage`, preserving different sizes in o
 
 - [Usage guide](usage.en.md): request parameters, configuration, caching, localization and limitations.
 - [Template examples](templates.md): variables, request formats and response extraction.
-- [Validation](validation.md): **33 backend tests + 6 frontend tests**, plus real ComfyUI workflow checks.
+- [Validation](validation.md): **33 backend tests + 9 frontend tests**, plus real ComfyUI workflow checks.
 - [Publishing](publishing.md): Registry, Manager and maintainer release steps.
 
 Keys are stored separately under `user/__custom_api/secrets.json` or read from configured environment variables. Local key files are plaintext protected by file permissions. Configuration is shared within a ComfyUI instance; there is no multi-tenant isolation.

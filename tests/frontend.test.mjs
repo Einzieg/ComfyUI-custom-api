@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { resolveLanguage } from "../web/i18n.js";
 import { modelOptions, parameterSchema, parseObject, selectableModels, selectionValues } from "../web/client.js";
 import { iconId } from "../web/icons.js";
+import { NodeInterface } from "../web/node_ui.js";
 
 test("locale preference, host locale and fallback", () => {
   assert.equal(resolveLanguage("auto", "zh-CN"), "zh");
@@ -68,4 +69,56 @@ test("LobeHub icons resolve explicit provider choices and recognized model famil
   assert.equal(iconId({ name: "Custom", icon: "lobehub:deepseek" }), "deepseek");
   assert.equal(iconId({ name: "Qwen", icon: "data:image/png;base64,AAAA" }), "");
   assert.equal(iconId({ name: "OpenRouter" }, { model_id: "anthropic/claude-sonnet" }), "claude");
+});
+
+function nodeInterfaceFixture(image = false) {
+  const names = ["provider_id", "model_id", "operation", "prompt", "parameters", "cache_mode", "request_nonce", ...(image ? [] : ["system"])];
+  const widgets = names.map(name => ({ name, value: `${name}-value`, hidden: true }));
+  const node = {
+    widgets, properties: {},
+    inputs: [{ name: "image", type: "IMAGE", link: null }, ...(image ? [{ name: "mask", type: "MASK", link: null }] : []),
+      ...names.map(name => ({ name, type: "STRING", link: null, widget: { name }, pos: [10, 10] }))],
+    addInput(name, type) { this.inputs.push({ name, type, link: null }); },
+    removeInput(index) { assert.equal(this.inputs[index].link, null, "never remove a connected input"); this.inputs.splice(index, 1); },
+  };
+  const ui = Object.assign(Object.create(NodeInterface.prototype), { node, widgets: Object.fromEntries(widgets.map(w => [w.name, w])) });
+  return { node, ui };
+}
+
+test("hidden canonical controls leave no input sockets on text and image nodes", () => {
+  for (const image of [false, true]) {
+    const { node, ui } = nodeInterfaceFixture(image);
+    const values = node.widgets.map(w => [w.name, w.value]);
+    ui.syncInputs();
+    assert.deepEqual(node.inputs.map(input => input.name), image ? ["image", "mask"] : ["image"]);
+    assert.deepEqual(node.widgets.map(w => [w.name, w.value]), values, "preserve workflow widget order and values");
+  }
+});
+
+test("restored workflows keep connected and explicitly exposed inputs", () => {
+  const { node, ui } = nodeInterfaceFixture();
+  node.properties.custom_api_inputs = ["system"];
+  node.inputs.find(input => input.name === "parameters").link = 42;
+  delete node.inputs.find(input => input.name === "provider_id").widget;
+  ui.syncInputs();
+  assert.deepEqual(node.inputs.map(input => input.name), ["image", "parameters", "system"]);
+  const parameters = node.inputs.find(input => input.name === "parameters");
+  assert.equal(parameters.link, 42);
+  assert.equal(parameters.widget, undefined);
+  assert.equal(ui.inputExposed("system"), true);
+});
+
+test("switching back to manual input removes its socket instead of hiding it", () => {
+  const { node, ui } = nodeInterfaceFixture();
+  ui.syncInputs();
+  for (let round = 0; round < 3; round++) {
+    node.properties.custom_api_inputs = ["prompt", "parameters", "system"];
+    ui.syncInputs();
+    ui.syncInputs();
+    assert.deepEqual(node.inputs.map(input => input.name), ["image", "prompt", "parameters", "system"]);
+    assert.ok(node.inputs.slice(1).every(input => input.type === "STRING" && !input.widget));
+    node.properties.custom_api_inputs = [];
+    ui.syncInputs();
+    assert.deepEqual(node.inputs.map(input => input.name), ["image"]);
+  }
 });

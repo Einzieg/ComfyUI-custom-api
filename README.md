@@ -59,7 +59,7 @@
 
 搜索 **`comfyui-custom-api`** 或 **`ComfyUI Custom API`**。
 
-- [Comfy Registry](https://registry.comfy.org/nodes/comfyui-custom-api)：已发布，官方搜索接口已返回该插件。`0.2.0` 当前仍处于平台审核状态。
+- [Comfy Registry](https://registry.comfy.org/nodes/comfyui-custom-api)：已创建条目，可安装版本受平台审核状态影响。
 - 旧版 Manager 默认目录：[收录 PR #3258](https://github.com/Comfy-Org/ComfyUI-Manager/pull/3258) 等待合并。
 
 若目录尚未刷新或暂时无法安装，可使用下面的 Git / ZIP 方式。[查看收录状态与发布说明 →](docs/publishing.md)
@@ -148,7 +148,7 @@ Windows 便携包通常使用 `python_embeded\python.exe`。已验证环境：Co
 
 - [完整使用指南](docs/usage.md)：节点操作、参数、缓存、遮罩、语言和密钥。
 - [请求模板说明](docs/templates.md)：变量、请求格式和响应提取示例。
-- [验证记录](docs/validation.md)：**33 项后端测试 + 6 项前端测试**，以及真实 ComfyUI 工作流验证。
+- [验证记录](docs/validation.md)：**33 项后端测试 + 9 项前端测试**，以及真实 ComfyUI 工作流验证。
 - [发布与收录](docs/publishing.md)：Registry、Manager 和维护者发布流程。
 
 开发需要 Python、PyTorch、`pytest`、`requirements.txt` 中的依赖，以及 Node.js 22+。运行 `python -m pytest -q` 和 `node --test tests/frontend.test.mjs` 执行测试；`scripts/package.py` 构建安装包，需要 Python 3.11+。测试使用本地模拟供应商，不会调用收费模型。

@@ -9,7 +9,7 @@ export class NodeInterface {
   constructor(node, getConfig, manage, edit) {
     this.node = node; this.getConfig = getConfig; this.manage = manage; this.edit = edit;
     this.allowed = node.comfyClass === "CustomAPIText" ? ["text", "vision"] : ["image", "image_edit"];
-    this.widgets = canonical(node); this.height = 270; this.inputWidgets = new Map();
+    this.widgets = canonical(node); this.height = 270;
     this.root = el("div", { class: "capi-node" });
     // Preserve canonical widget order and values for existing workflows.
     for (const widget of Object.values(this.widgets)) {
@@ -49,10 +49,16 @@ export class NodeInterface {
   syncInputs() {
     const exposed = this.node.properties?.custom_api_inputs || [];
     for (const name of Object.keys(this.widgets)) {
-      let slot = this.node.inputs?.find(input => input.name === name);
-      if (!exposed.includes(name) && slot?.link == null) continue;
+      const index = this.node.inputs?.findIndex(input => input.name === name) ?? -1;
+      let slot = this.node.inputs?.[index];
+      if (!exposed.includes(name) && slot?.link == null) {
+        // Hidden widgets still have clickable sockets in ComfyUI. Remove unused
+        // sockets through LiteGraph so remaining links keep their slot indices.
+        if (slot) this.node.removeInput(index);
+        continue;
+      }
       if (!slot) { this.node.addInput(name, "STRING"); slot = this.node.inputs.find(input => input.name === name); }
-      if (slot.widget) { this.inputWidgets.set(name, slot.widget); delete slot.widget; }
+      delete slot.widget;
       slot._widget = undefined; slot.pos = undefined;
       slot.localized_name = t(`node.${name}`);
     }
@@ -60,16 +66,11 @@ export class NodeInterface {
   inputToggle(name) {
     const toggle = button(t(this.inputExposed(name) ? "manualInput" : "connectionInput"), () => {
       this.edit(this.node, () => {
-        let slot = this.node.inputs.find(input => input.name === name);
         const exposed = new Set(this.node.properties?.custom_api_inputs || []);
-        if (slot && !slot.widget) { slot.widget = this.inputWidgets.get(name) || { name }; slot._widget = this.widgets[name]; exposed.delete(name); }
-        else {
-          if (!slot) { this.node.addInput(name, "STRING"); slot = this.node.inputs.find(input => input.name === name); }
-          if (slot.widget) this.inputWidgets.set(name, slot.widget);
-          delete slot.widget; slot._widget = undefined; exposed.add(name);
-        }
-        slot.pos = undefined; slot.localized_name = t(`node.${name}`);
+        if (this.inputExposed(name)) exposed.delete(name);
+        else exposed.add(name);
         (this.node.properties ||= {}).custom_api_inputs = [...exposed];
+        this.syncInputs();
       });
       this.render();
     }, "capi-input-toggle");
