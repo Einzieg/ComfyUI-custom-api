@@ -1,55 +1,134 @@
-# ComfyUI Custom API
+<p align="center">
+  <img src="assets/logo.svg" width="104" height="104" alt="ComfyUI Custom API logo">
+</p>
 
-A ComfyUI extension for configuring custom model providers and calling text, vision, image generation and image editing APIs. Includes English and Simplified Chinese interfaces.
+<h1 align="center">ComfyUI Custom API</h1>
 
-[简体中文](../README.md) · [Releases](https://github.com/Einzieg/ComfyUI-custom-api/releases/latest) · [Issues](https://github.com/Einzieg/ComfyUI-custom-api/issues) · [MIT License](../LICENSE)
+<p align="center">Connect your model APIs to your ComfyUI workflows.</p>
+
+<p align="center">
+  <a href="https://github.com/Einzieg/ComfyUI-custom-api/releases"><img src="https://img.shields.io/github/v/release/Einzieg/ComfyUI-custom-api?color=5a9bff" alt="Release"></a>
+  <a href="https://github.com/Einzieg/ComfyUI-custom-api/actions/workflows/test.yml"><img src="https://github.com/Einzieg/ComfyUI-custom-api/actions/workflows/test.yml/badge.svg" alt="Tests"></a>
+  <a href="../LICENSE"><img src="https://img.shields.io/badge/license-MIT-5a9bff" alt="MIT License"></a>
+  <a href="https://registry.comfy.org/nodes/comfyui-custom-api"><img src="https://img.shields.io/badge/Comfy_Registry-published-5a9bff" alt="Comfy Registry"></a>
+</p>
+
+<p align="center">
+  <a href="../README.md">简体中文</a> · English · <a href="#install">Install</a> · <a href="templates.md">Request templates</a> · <a href="https://github.com/Einzieg/ComfyUI-custom-api/issues">Issues</a>
+</p>
+
+Configure providers, discover models and customize request formats from the topbar. Use nodes for **text, vision, image generation and image editing**, with English and Simplified Chinese interfaces. No local model weights required.
+
+![API nodes in a real ComfyUI workflow](assets/workflow.png)
+
+<p align="center"><sub>Captured from the running extension with local demo configuration. Brand and model names are examples, not provider compatibility certifications.</sub></p>
+
+## Features
+
+| Capability | What it provides |
+|---|---|
+| **Providers** | Custom names, LobeHub icons, Base URLs, keys, authentication, timeouts and concurrency |
+| **Models** | Discovery or manual entry; unified search; aliases, groups and bulk template assignment |
+| **Requests** | JSON, forms and multipart; configurable paths, headers, queries, variables and response extraction |
+| **Nodes** | Text / vision, image generation / editing, and composable JSON parameters |
+| **Execution** | Async polling, cancellation, cached results and an explicit request nonce |
+| **Configuration** | Separate local credential storage; saved keys excluded from workflows and configuration exports |
+
+### Model management
+
+Manage providers and model capabilities in one panel. Choose from **322 bundled LobeHub brand icons**, served locally.
+
+![Provider and model management](assets/models.png)
+
+<details>
+<summary><strong>Request template editor and icon picker</strong></summary>
+
+Edit request and response mappings to match your provider's documentation. Preview the request before making a call.
+
+![Custom request template editor](assets/templates.png)
+
+Search the local icon library or match icons from provider names automatically.
+
+![LobeHub icon picker](assets/icons.png)
+
+</details>
 
 ## Install
 
-ComfyUI-Manager inclusion is being requested; default catalog search is not yet guaranteed. See [publishing status](publishing.md).
+### Custom node manager
 
-Clone `https://github.com/Einzieg/ComfyUI-custom-api.git` into your running ComfyUI installation's `custom_nodes` directory, or extract `ComfyUI-custom-api` from a [release ZIP](https://github.com/Einzieg/ComfyUI-custom-api/releases/latest) there. Install `requirements.txt` using **that ComfyUI installation's Python**, restart ComfyUI, and refresh the browser.
+Search for **`comfyui-custom-api`** or **`ComfyUI Custom API`**.
 
-Validated with ComfyUI 0.35.0, frontend 1.51.10 and Python 3.13.12. API calls can run in CPU mode without local model weights.
+- [Comfy Registry](https://registry.comfy.org/nodes/comfyui-custom-api): published and returned by the official search API. Version `0.2.0` is currently pending platform review.
+- Legacy Manager catalog: [inclusion PR #3258](https://github.com/Comfy-Org/ComfyUI-Manager/pull/3258) awaits merging.
 
-## Use
+If the catalog has not refreshed or installation is unavailable, use Git or the release ZIP. [Publishing status →](publishing.md)
 
-1. Open **API** on the action bar, or **Extensions → Model API** in the main menu.
-2. Add a provider with a name, a searchable LobeHub brand icon, Base URL, and authentication.
-3. Fetch models or add them manually. Assign each model's supported operations to API templates.
-4. Preview a request in **Test API**; **Run test** sends a real request and may incur provider charges.
-5. Add **API Text / Vision** or **API Image** nodes. Search for a model in the node's model picker and connect images as needed.
+### Git or ZIP
 
-Model discovery preserves existing settings and does not guess model capabilities. Image results connect directly to standard image nodes and preserve different sizes using ComfyUI output lists. The **API Parameter** node builds typed JSON parameters through connections.
+Open PowerShell 7 in your **running ComfyUI installation's** `custom_nodes` directory:
 
-## Templates
+```powershell
+$ErrorActionPreference = 'Stop'
+git clone https://github.com/Einzieg/ComfyUI-custom-api.git
+if ($LASTEXITCODE -ne 0) { throw 'Plugin download failed' }
+```
 
-Version **0.2.0** adds 322 bundled [LobeHub brand icons](https://github.com/lobehub/lobe-icons), a compact node interface and searchable model selection across providers. Advanced controls start collapsed; text results appear after execution. Use **Connect input** beside prompt, system or parameters to expose a socket. Connected values come from upstream nodes. **New result next run** updates the nonce; it does not submit a request until you press ComfyUI Run.
+Alternatively, extract `ComfyUI-custom-api` from the [latest release ZIP](https://github.com/Einzieg/ComfyUI-custom-api/releases/latest) into `custom_nodes`.
 
-Provider settings include a searchable icon library and **Save & fetch models**. The model list supports bulk template assignment to selected models, while the editor provides **Save & return** and **Save & test**. Opening the manager from a node also provides a **Use** action. Existing workflow input order and provider credentials are preserved.
+Install `requirements.txt` using **that ComfyUI installation's Python**, then restart ComfyUI and refresh your browser. Replace these example paths:
 
-Icons are served locally from `@lobehub/icons-static-svg@1.95.0` under the MIT license. See [icon provenance](icons.md).
+```powershell
+$ErrorActionPreference = 'Stop'
+& 'D:\ComfyUI\venv\Scripts\python.exe' -m pip install -r 'D:\ComfyUI\custom_nodes\ComfyUI-custom-api\requirements.txt'
+if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed' }
+```
 
-Templates configure HTTP methods, relative endpoint paths, headers, queries, JSON/form/multipart bodies, response extraction and asynchronous polling. The built-in templates cover common Chat Completions, Images generation/edit, and a customizable asynchronous task pattern.
+Windows portable builds usually use `python_embeded\python.exe`. Validated with **ComfyUI 0.35.0 / frontend 1.51.10 / Python 3.13.12**, CPU mode.
 
-Use placeholders such as `{{model}}`, `{{prompt}}`, `{{messages}}`, `{{params.temperature}}`, `{{image}}`, `{{images}}`, `{{api_key}}`, and `{{task_id}}`. Whole-value placeholders preserve JSON types. Paths support `$.data[0].url`, `$.data[*]` and bracketed string keys. No executable scripting is supported.
+## Quick start
 
-Template parameters define typed controls. Model defaults override template defaults; node parameters override model defaults. Only parameters explicitly referenced in the request template are sent.
+1. **Add a provider** using **API** in the topbar or **Extensions → Model API**. Enter its Base URL and authentication.
+2. **Fetch models** with **Save & fetch models**, or add model IDs manually.
+3. **Assign templates** to the model's supported operations. Copy and edit templates for nonstandard endpoints.
+4. **Use a node**: choose a model in the searchable picker, enter a prompt, and run the workflow.
 
-See the JSON examples in [templates.md](templates.md). Polling supports an optional cancellation request; local cancellation cannot guarantee remote termination or refunds. Paid submissions are never automatically retried. Transient read-only GET requests may retry twice.
+| Operation | Common template starting point |
+|---|---|
+| Text / vision | `Chat Completions` |
+| Image generation | `Images · Generate` |
+| Image editing | `Images · Edit` |
+| Custom asynchronous tasks | Async task template, adapted to the provider's API |
 
-## Configuration and privacy
+**Discovery retrieves model IDs; it does not guess model capabilities.** Assign an operation template before a new model appears in the relevant node picker. Request previews make no generation call; running a test can incur provider charges.
 
-The default location is ComfyUI's private system-user directory, `user/__custom_api`. `config.json` and `secrets.json` are separate. Set `COMFYUI_CUSTOM_API_DIR` to use another private directory, or configure an environment variable as a provider's API key source.
+## Nodes
 
-Saved keys are never returned by the configuration endpoint. Workflows and PNG metadata contain configuration IDs, and exports omit stored keys. Imports create new IDs and do not overwrite existing entries. Credentials are not forwarded to different image download hosts. API templates should reference `{{api_key}}` instead of containing literal credentials.
+| Node | Purpose | Outputs |
+|---|---|---|
+| **API Text / Vision** | Prompts, system messages and optional images | Text, redacted response JSON, call metadata |
+| **API Image** | Image generation / editing, optional images and mask | IMAGE list, redacted response JSON, call metadata |
+| **API Parameter** | Compose typed parameters through connections | Parameter JSON |
 
-This first release shares configuration within a ComfyUI instance; it does not implement multi-tenant accounts. Local key files are plaintext protected by file permissions, not encrypted storage. Use external authentication and access control for shared deployments.
+Images connect to `PreviewImage` or `SaveImage`, preserving different sizes in output lists. **Connect input** exposes sockets beside prompts, system messages and parameters. Advanced controls start collapsed.
 
-## Execution and localization
+**New result next run** updates the nonce; a request is sent when the workflow next runs. Paid submissions are not automatically retried.
 
-The default cache mode reuses unchanged results. Change the request nonce to request another result, or select `refresh` to request every time. A nonce is not a model seed. Changing the selected provider, key, model or template invalidates the related cache. UI language is stored as presentation metadata rather than a model input.
+## Documentation
 
-The panel and existing node displays use the plugin language preference. The node library uses ComfyUI's locale files. Custom provider/model names and model outputs remain untranslated.
+- [Usage guide](usage.en.md): request parameters, configuration, caching, localization and limitations.
+- [Template examples](templates.md): variables, request formats and response extraction.
+- [Validation](validation.md): **33 backend tests + 6 frontend tests**, plus real ComfyUI workflow checks.
+- [Publishing](publishing.md): Registry, Manager and maintainer release steps.
 
-Video/audio nodes, streaming, cURL import, arbitrary scripts, multi-step file storage uploads, automatic model-list pagination and restart recovery for remote tasks are outside this release.
+Keys are stored separately under `user/__custom_api/secrets.json` or read from configured environment variables. Local key files are plaintext protected by file permissions. Configuration is shared within a ComfyUI instance; there is no multi-tenant isolation.
+
+Video/audio nodes, streaming, arbitrary scripts, cURL import and multistep storage uploads are outside this release. See the usage guide for protocol boundaries.
+
+Development requires Python, PyTorch, `pytest`, `requirements.txt` dependencies and Node.js 22+. Run `python -m pytest -q` and `node --test tests/frontend.test.mjs`. Building with `scripts/package.py` requires Python 3.11+. Tests use a local mock provider and make no paid model calls.
+
+Issues and pull requests for fixes, translations and request templates are welcome. Remove credentials and private configuration before sharing reports.
+
+## License and credits
+
+The project and its original logo use the [MIT License](../LICENSE). Thanks to [ComfyUI](https://github.com/Comfy-Org/ComfyUI) and [LobeHub Icons](https://icons.lobehub.com/). Brand icons come from `@lobehub/icons-static-svg@1.95.0` with its MIT license retained. [Icon provenance](icons.md) · [Screenshot and asset notes](assets/README.md).

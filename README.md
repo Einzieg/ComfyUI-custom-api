@@ -1,20 +1,72 @@
-# ComfyUI Custom API
+<p align="center">
+  <img src="docs/assets/logo.svg" width="104" height="104" alt="ComfyUI Custom API 项目图标">
+</p>
 
-在 ComfyUI 中管理自定义模型供应商，并通过节点调用文本、识图、生图和图片编辑 API。提供简体中文和英文界面。
+<h1 align="center">ComfyUI Custom API</h1>
 
-当前版本：**0.2.0**。新增本地 LobeHub 图标库、紧凑节点、统一模型搜索和批量接口绑定。
+<p align="center">把自己的模型 API，接进 ComfyUI 工作流。</p>
 
-[English](docs/README.en.md) · [接口模板说明](docs/templates.md) · [验证记录](docs/validation.md)
+<p align="center">
+  <a href="https://github.com/Einzieg/ComfyUI-custom-api/releases"><img src="https://img.shields.io/github/v/release/Einzieg/ComfyUI-custom-api?color=5a9bff" alt="Release"></a>
+  <a href="https://github.com/Einzieg/ComfyUI-custom-api/actions/workflows/test.yml"><img src="https://github.com/Einzieg/ComfyUI-custom-api/actions/workflows/test.yml/badge.svg" alt="Tests"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-5a9bff" alt="MIT License"></a>
+  <a href="https://registry.comfy.org/nodes/comfyui-custom-api"><img src="https://img.shields.io/badge/Comfy_Registry-published-5a9bff" alt="Comfy Registry"></a>
+</p>
 
-[GitHub](https://github.com/Einzieg/ComfyUI-custom-api) · [下载安装包](https://github.com/Einzieg/ComfyUI-custom-api/releases/latest) · [反馈问题](https://github.com/Einzieg/ComfyUI-custom-api/issues) · [MIT License](LICENSE)
+<p align="center">
+  简体中文 · <a href="docs/README.en.md">English</a> · <a href="#安装">安装</a> · <a href="docs/templates.md">请求模板</a> · <a href="https://github.com/Einzieg/ComfyUI-custom-api/issues">问题反馈</a>
+</p>
+
+通过顶部管理面板配置供应商、发现模型、编辑请求格式，再用节点完成**文本、识图、生图和图片编辑**。支持简体中文 / English，调用 API 无需下载本地模型权重。
+
+![ComfyUI 中的 API 工作流](docs/assets/workflow.png)
+
+<p align="center"><sub>真实 ComfyUI 界面，使用本地演示配置。截图中的品牌和模型名称不代表供应商兼容性认证。</sub></p>
+
+## 功能
+
+| 能力 | 可以做什么 |
+|---|---|
+| **供应商管理** | 自定义名称、LobeHub 图标、Base URL、API Key、鉴权方式、超时与并发 |
+| **模型管理** | 自动发现或手动添加；统一搜索；别名、分组及批量操作模板绑定 |
+| **自定义请求** | JSON、表单、multipart；自定义路径、Header、Query、变量和响应提取 |
+| **工作流节点** | 文本 / 识图、图像生成 / 编辑、可串联的 JSON 参数节点 |
+| **任务与缓存** | 异步任务轮询、停止等待、结果复用和“下次重新请求” |
+| **本地配置** | 密钥与配置分开保存；工作流和导出配置不包含已存密钥 |
+
+### 模型管理
+
+在一个面板中管理多个供应商，搜索模型并为支持的操作绑定模板。内置 **322 个 LobeHub 品牌图标**，随插件本地加载。
+
+![供应商与模型管理实机截图](docs/assets/models.png)
+
+<details>
+<summary><strong>查看请求模板编辑器和图标选择器</strong></summary>
+
+按供应商文档修改请求和响应映射，预览后再发起调用。
+
+![自定义请求模板编辑器实机截图](docs/assets/templates.png)
+
+通过搜索选择品牌图标，也可以根据供应商名称自动匹配。
+
+![LobeHub 图标选择器实机截图](docs/assets/icons.png)
+
+</details>
 
 ## 安装
 
-ComfyUI-Manager 收录正在申请，暂时不能保证在默认目录搜索到。收录进度与 Registry 发布说明见 [发布说明](docs/publishing.md)。
+### 在自定义节点管理器中查找
+
+搜索 **`comfyui-custom-api`** 或 **`ComfyUI Custom API`**。
+
+- [Comfy Registry](https://registry.comfy.org/nodes/comfyui-custom-api)：已发布，官方搜索接口已返回该插件。`0.2.0` 当前仍处于平台审核状态。
+- 旧版 Manager 默认目录：[收录 PR #3258](https://github.com/Comfy-Org/ComfyUI-Manager/pull/3258) 等待合并。
+
+若目录尚未刷新或暂时无法安装，可使用下面的 Git / ZIP 方式。[查看收录状态与发布说明 →](docs/publishing.md)
 
 ### 从 GitHub 安装
 
-在 **实际运行的 ComfyUI** 的 `custom_nodes` 目录打开 PowerShell 7：
+在**实际运行的 ComfyUI** 的 `custom_nodes` 目录打开 PowerShell 7：
 
 ```powershell
 $ErrorActionPreference = 'Stop'
@@ -22,13 +74,9 @@ git clone https://github.com/Einzieg/ComfyUI-custom-api.git
 if ($LASTEXITCODE -ne 0) { throw '插件下载失败' }
 ```
 
-也可从 [Releases](https://github.com/Einzieg/ComfyUI-custom-api/releases/latest) 下载 ZIP：
+也可以下载 [最新 Release ZIP](https://github.com/Einzieg/ComfyUI-custom-api/releases/latest)，将其中的 `ComfyUI-custom-api` 文件夹放进 `custom_nodes`。
 
-1. 将发布包中的 `ComfyUI-custom-api` 文件夹放进 `custom_nodes` 目录。已通过 Git 安装时跳过此步。
-2. 使用 **ComfyUI 自己的 Python 环境** 安装本插件的 `requirements.txt`。
-3. 重启 ComfyUI，刷新浏览器。
-
-PowerShell 7 示例（将路径改成你的实际安装位置）：
+随后使用 **ComfyUI 自己的 Python 环境** 安装依赖，重启 ComfyUI 并刷新浏览器。下面的路径需替换为你的实际路径：
 
 ```powershell
 $ErrorActionPreference = 'Stop'
@@ -36,115 +84,77 @@ $ErrorActionPreference = 'Stop'
 if ($LASTEXITCODE -ne 0) { throw '依赖安装失败' }
 ```
 
-Windows 便携包通常使用 `python_embeded\python.exe`。插件不需要下载模型权重，API 节点可以在 CPU 模式运行。
-
-测试环境：ComfyUI **0.35.0**、前端 **1.51.10**、Python **3.13.12**。旧版前端若没有工具栏入口，可尝试主菜单的 **Extensions → 模型 API**；旧版本不在本次完整验证范围内。
+Windows 便携包通常使用 `python_embeded\python.exe`。已验证环境：ComfyUI **0.35.0** / 前端 **1.51.10** / Python **3.13.12**，CPU 模式。
 
 ## 第一次使用
 
-1. 点击顶部操作栏的 **API**，或主菜单 **Extensions → 模型 API**。
-2. 添加供应商，填写名称、Base URL、鉴权方式及 API Key。可搜索选择 LobeHub 图标，也可根据名称自动匹配。
-3. 点击“保存并获取模型”，或保存后手动添加模型。
-4. 编辑模型，为支持的操作绑定模板：
-   - 文本/识图：`Chat Completions`。
-   - 生图：`Images · Generate`。
-   - 图片编辑：`Images · Edit`。
-   - 非标准接口：复制模板并按供应商文档修改。
-5. 在“调用测试”中先预览请求，再根据需要点击实际调用。实际调用可能产生供应商费用。
-6. 在工作流中添加 `API 文本 / 识图` 或 `API 图像`。点击节点顶部的模型选择器，搜索并选择模型；可按供应商筛选。
+1. **添加供应商**：点击顶栏 **API**，或主菜单 **Extensions → 模型 API**，填写 Base URL 和鉴权信息。
+2. **获取模型**：点击“保存并获取模型”，或手动添加模型 ID。
+3. **绑定模板**：为模型支持的操作选择模板；非标准接口可复制模板后编辑。
+4. **开始使用**：添加 API 节点，在顶部模型选择器中选好模型，输入提示词并运行。
 
-自动发现仅获取模型 ID 和名称，**不会猜测模型能力**。新发现的模型需要绑定模板。刷新列表会保留手动模型、别名、分组、绑定和参数。
+| 操作 | 常见模板起点 |
+|---|---|
+| 文本、识图 | `Chat Completions` |
+| 图像生成 | `Images · Generate` |
+| 图片编辑 | `Images · Edit` |
+| 自定义异步任务 | 异步任务模板，需按供应商文档修改 |
 
-模型列表支持勾选多项后批量绑定指定操作的模板；应用会替换所选模型在该操作上的绑定，保留其他操作。全选只选择当前搜索结果。模型编辑使用独立页面，可“保存并返回”或“保存并测试”。从节点进入管理面板时，可点击模型行中的“使用”返回当前节点。
+**自动发现只获取模型列表，不会猜测模型能力。** 新模型需要绑定模板后才会出现在对应节点的选择器中。可先在“调用测试”里预览请求；实际调用可能产生供应商费用。
 
-## 节点操作
+## 三种节点
 
-- 顶部模型选择器同时搜索模型名称、ID、分组和供应商，只列出当前节点类型可用的模型。
-- 选择模型后同步供应商，并选用该模型支持的操作；不会在配置刷新时自动替换已选模型。
-- 模型参数、系统提示词、JSON 和缓存设置收在“参数与高级设置”中，按需展开。
-- 提示词、系统提示词和参数旁的“接入节点”可显示连线插槽。连接上游节点后，相应内容由连线提供；断开连线后可切回手动输入。
-- “下次重新请求”更新请求编号，之后点击 ComfyUI 的运行按钮才会发送请求。
-- 文本结果在收到响应后显示，可折叠、复制；没有结果时不占空白区域。
-
-保留了 0.1.0 工作流的节点类型、输入名称和序列化顺序。升级不会迁移或覆盖供应商密钥。
-
-## 品牌图标
-
-内置 **322 个 LobeHub 品牌图标**，来自官方 [`@lobehub/icons-static-svg` 1.95.0](https://github.com/lobehub/lobe-icons)。图标随插件本地提供，运行时不请求外部图标 CDN。单色图标随界面颜色显示，彩色图标保留品牌色。
-
-供应商图标可手动选择，或根据名称/地址自动匹配；模型列表及节点也会识别已知模型品牌。原有自定义图片仍可使用。来源和许可见 [图标说明](docs/icons.md)。
-
-## 节点
-
-| 节点 | 输入 | 输出 |
+| 节点 | 用途 | 输出 |
 |---|---|---|
-| API 文本 / 识图 | 提示词、系统提示词、参数 JSON、可选图片批次 | 文本、脱敏响应 JSON、调用信息 JSON；可在节点内查看文本 |
-| API 图像 | 提示词、参数 JSON、可选图片批次和遮罩 | IMAGE 列表、脱敏响应 JSON、调用信息 JSON |
-| API 参数 | 参数名称、字符串或 JSON 值、可选已有参数 JSON | 合并后的参数 JSON，可串联多个节点 |
+| **API 文本 / 识图** | 提示词、系统提示词，可选图片 | 文本、脱敏响应 JSON、调用信息 |
+| **API 图像** | 生图、图片编辑，可选图片和遮罩 | IMAGE 列表、脱敏响应 JSON、调用信息 |
+| **API 参数** | 按类型组合参数，可串联 | 参数 JSON |
 
-图像输出可直接连接 `PreviewImage`、`SaveImage` 或其他图像节点。多张不同尺寸图片作为 ComfyUI 列表输出，保持原始尺寸，不强制缩放成同一个批次。
+图像可直接连接 `PreviewImage`、`SaveImage`；不同尺寸的多张图片保留原始尺寸。提示词、系统提示词和参数旁的“接入节点”可显示连线插槽。
 
-模板的参数定义会生成节点控件。模型默认参数覆盖模板默认值，节点参数再覆盖模型默认值。也可以把 `parameters` 转成输入，通过其他节点传入完整 JSON。**参数只有被接口模板引用时才会发送**，例如 `{{params.seed}}`；插件不会自动向供应商添加未声明字段。
+高级设置默认折叠。点击“下次重新请求”只更新请求编号，下次运行工作流时才发送请求；生成请求失败后不会自动重试。
 
-遮罩输入采用 ComfyUI 的语义：1 表示编辑区域。上传时转为 PNG alpha 遮罩，透明区域表示编辑区域。供应商使用其他遮罩约定时，应先在工作流中转换，或改用符合其约定的图片输入与模板。
+## 常见问题
 
-## 请求、响应和任务
+<details>
+<summary><strong>为什么获取到的模型没有出现在节点里？</strong></summary>
 
-- 支持 GET / POST / PUT / PATCH / DELETE、JSON、URL 编码表单和 multipart 文件上传。
-- 支持 Bearer、自定义 Header、自定义 Query 鉴权和无鉴权。
-- 支持嵌套 JSON、数组及保留数值/布尔类型的变量替换。
-- 调用测试中的图片展示为最长边 1024 像素的预览图；图像节点输出保持原图。
-- 图片支持远程 URL、Base64、Data URL 或直接返回的图片二进制。
-- 异步接口支持提交任务、任务 ID 提取、状态轮询、超时和可选远端取消。
-- 每个供应商可设置超时、并发数、HTTP 代理。
-- GET 遇到 429/502/503/504 最多重试两次。**生成请求不会自动重试**，避免重复提交和扣费。
-- 点击停止会取消本地等待；模板配置了 `poll.cancel` 时尝试请求远端取消。远端是否停止取决于供应商，无法保证退费。
+请编辑模型，给当前节点需要的操作绑定模板，例如“文本”或“图像生成”。模型选择器只显示支持当前节点操作的模型。
 
-详见 [模板配置示例](docs/templates.md)。预设只是常见格式的起点，同一模型名称在不同供应商下可能需要不同请求参数。
+</details>
 
-## 缓存与重新请求
+<details>
+<summary><strong>API Key 保存在哪里？</strong></summary>
 
-默认 `reuse` 复用 ComfyUI 缓存。修改提示词、输入图片、参数或请求编号，才会再次请求。当前模型所引用的供应商、密钥或模板配置改变后，相关缓存也会失效。
+默认保存在 ComfyUI 私有系统用户目录 `user/__custom_api/secrets.json`，也可从指定环境变量读取。文件是受本地权限保护的明文存储。配置按 ComfyUI 实例共享，不提供多租户隔离。详见[配置与密钥](docs/usage.md#配置与密钥)。
 
-- 修改 `request_nonce` 可主动发起新请求；它是缓存控制编号，不是模型随机种子。
-- `refresh` 表示每次运行都请求，可能产生重复费用。
-- 语言选择写入工作流展示属性，不作为模型输入，不会因切换语言单独触发新请求。
+</details>
 
-## 语言
+<details>
+<summary><strong>为什么参数没有发送给供应商？</strong></summary>
 
-管理面板可选择“跟随 ComfyUI / 简体中文 / English”。面板和现有节点的显示随设置更新。节点库与 ComfyUI 自带控件的翻译由宿主语言系统负责。
+只有模板引用的参数才会发送，例如 `{{params.temperature}}`。模型默认值覆盖模板默认值，节点参数覆盖模型默认值。[查看模板示例](docs/templates.md)。
 
-用户自定义的供应商名称、模型别名、提示词和模型返回内容原样显示。自定义参数标签可写成 `{"zh":"温度","en":"Temperature"}`。新增语言需要在源码中扩展语言选择与 `web/locales`，并调整、运行 `scripts/sync_locales.py` 生成宿主语言文件。
+</details>
 
-## 配置与密钥
+<details>
+<summary><strong>支持哪些语言和接口？</strong></summary>
 
-- 默认使用 ComfyUI 的私有系统用户目录：`ComfyUI/user/__custom_api/`；自定义 `--user-directory` 时相应调整。
-- `config.json` 保存供应商、模型和模板；`secrets.json` 单独保存密钥。
-- 可设置 `COMFYUI_CUSTOM_API_DIR` 为独立私有目录。不要放进可通过 HTTP 访问的目录。
-- 密钥也可通过供应商设置中的环境变量名称读取。环境变量优先于已存密钥。
-- API Key 输入框不会回显旧密钥。不修改字段会保留密钥；编辑后清空表示删除密钥。
-- 工作流与 PNG 元数据仅包含配置 ID。导出配置不包含已存密钥，导入会生成新的 ID 并保留当前配置。
-- 供应商密钥不会随图片下载发送给不同域名的 CDN。
-- 配置使用原子写入和修订号检查，防止两个窗口无提示地覆盖彼此的更改。
+界面可选择“跟随 ComfyUI / 简体中文 / English”。支持常见 HTTP JSON / 表单 / multipart 接口及异步轮询。当前不包含视频、音频、流式文本、任意脚本、cURL 导入和多步骤第三方存储上传。
 
-首版配置按 **ComfyUI 实例共享**，适合本机或受信任团队使用；不提供租户隔离或独立账号系统。密钥文件是受文件权限保护的本地明文文件，未宣称静态加密。对外部署应使用 ComfyUI 外部的认证与访问控制。
+</details>
 
-## 开发与验证
+## 文档与开发
 
-以下命令需要完整源码，安装包不包含开发脚本与测试。后端的 HTTP、模板和配置功能可独立于 ComfyUI 测试；完整图片节点测试使用 ComfyUI 环境里的 PyTorch。
+- [完整使用指南](docs/usage.md)：节点操作、参数、缓存、遮罩、语言和密钥。
+- [请求模板说明](docs/templates.md)：变量、请求格式和响应提取示例。
+- [验证记录](docs/validation.md)：**33 项后端测试 + 6 项前端测试**，以及真实 ComfyUI 工作流验证。
+- [发布与收录](docs/publishing.md)：Registry、Manager 和维护者发布流程。
 
-开发依赖：`requirements.txt`、`pytest`、PyTorch，以及 Node.js 22 或更高版本。运行 `scripts/package.py` 构建安装包需要 Python 3.11 或更高版本。GitHub Actions 使用本地模拟供应商执行后端和前端测试。
+开发需要 Python、PyTorch、`pytest`、`requirements.txt` 中的依赖，以及 Node.js 22+。运行 `python -m pytest -q` 和 `node --test tests/frontend.test.mjs` 执行测试；`scripts/package.py` 构建安装包，需要 Python 3.11+。测试使用本地模拟供应商，不会调用收费模型。
 
-```powershell
-$ErrorActionPreference = 'Stop'
-python -m pytest -q
-if ($LASTEXITCODE -ne 0) { throw '后端测试失败' }
-node --test tests/frontend.test.mjs
-if ($LASTEXITCODE -ne 0) { throw '前端测试失败' }
-```
+欢迎通过 [Issues](https://github.com/Einzieg/ComfyUI-custom-api/issues) 提交问题，或通过 Pull Request 补充翻译与请求模板。反馈时请移除 API Key 和私人配置。
 
-`tests/mock_provider.py` 是只监听本机的模拟供应商，供开发验证，不会产生真实 API 费用。`scripts/smoke_comfyui.py` 会修改固定测试端口 `8191` 的配置，仅用于 `.dev` 隔离测试实例，**不要指向生产实例**。
+## 许可与致谢
 
-`example_workflows` 提供 ComfyUI API 格式的文本和生图示例。示例中的 `provider_id`、`model_id` 留空，使用前需选择或填入自己配置的供应商和模型。
-
-首版暂未实现视频/音频节点、流式文本、任意代码脚本、cURL 导入、费用账单和第三方文件存储上传。需要“先上传到专属存储取得 file_id，再发生成请求”的接口暂不直接适配；可先由上游节点提供已上传资源的 URL/ID，再通过参数模板引用。
+本项目及原创项目图标采用 [MIT License](LICENSE)。感谢 [ComfyUI](https://github.com/Comfy-Org/ComfyUI) 和 [LobeHub Icons](https://icons.lobehub.com/)。供应商品牌图标来自官方 `@lobehub/icons-static-svg@1.95.0`，保留其 MIT 许可；[图标来源](docs/icons.md) · [截图与素材说明](docs/assets/README.md)。

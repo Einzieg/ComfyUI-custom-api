@@ -16,6 +16,7 @@ Documentation = "https://github.com/Einzieg/ComfyUI-custom-api#readme"
 [tool.comfy]
 PublisherId = "einzieg"
 DisplayName = "ComfyUI Custom API"
+Icon = "https://raw.githubusercontent.com/Einzieg/ComfyUI-custom-api/main/docs/assets/logo.png"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

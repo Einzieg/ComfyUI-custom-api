@@ -16,6 +16,10 @@
 
 后端 **33 项通过**，前端 **6 项通过**。
 
+公开仓库的 [GitHub Actions](https://github.com/Einzieg/ComfyUI-custom-api/actions/workflows/test.yml) 已在 Linux / Python 3.13 / Node.js 22 中通过相同测试和安装包构建。发布元数据和工作流文件已通过 `actionlint` 校验。
+
+README 的四张截图来自实际运行的 ComfyUI 插件，使用隔离的演示配置和本地无头 Chrome 拍摄。未调用演示供应商，截图不包含真实密钥；节点和管理面板均已逐张检查。截图页面没有出现 JavaScript 异常。
+
 | 范围 | 已验证内容 |
 |---|---|
 | 模板与参数 | 嵌套变量、原生 JSON 类型、路径提取、参数类型与边界、非法模板拒绝 |
