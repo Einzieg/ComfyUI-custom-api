@@ -52,6 +52,8 @@ class ProviderHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self.server.calls.append({"method": "GET", "path": self.path, "headers": dict(self.headers)})
+        if self.path == "/v1/redirect":
+            return self.reply({}, 302, Location=self.server.redirect_url)
         if self.path.startswith("/v1/models"):
             if self.server.model_failures > 0:
                 self.server.model_failures -= 1

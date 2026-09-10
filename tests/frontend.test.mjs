@@ -1,26 +1,45 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { resolveLanguage } from "../web/i18n.js";
+import { initializeI18n, parameterLabel, refreshLanguage, resolveLanguage, t } from "../web/i18n.js";
 import { modelOptions, parameterSchema, parseObject, selectableModels, selectionValues } from "../web/client.js";
 import { iconId } from "../web/icons.js";
 import { NodeInterface } from "../web/node_ui.js";
 
-test("locale preference, host locale and fallback", () => {
-  assert.equal(resolveLanguage("auto", "zh-CN"), "zh");
-  assert.equal(resolveLanguage("en", "zh"), "en");
-  assert.equal(resolveLanguage("auto", "fr"), "en");
-  assert.equal(resolveLanguage("auto", null, "zh-TW"), "zh");
+test("only the ComfyUI locale selects translations, with English fallback", () => {
+  assert.equal(resolveLanguage("zh-CN"), "zh");
+  assert.equal(resolveLanguage("en"), "en");
+  assert.equal(resolveLanguage("fr"), "en");
+  assert.equal(resolveLanguage(undefined, "zh-TW"), "en");
 });
 
 test("all Chinese translations match the English key set", () => {
-  const en = JSON.parse(readFileSync(new URL("../web/locales/en.json", import.meta.url), "utf8"));
-  const zh = JSON.parse(readFileSync(new URL("../web/locales/zh.json", import.meta.url), "utf8"));
+  const en = JSON.parse(readFileSync(new URL("../locales/en/main.json", import.meta.url), "utf8")).customAPI;
+  const zh = JSON.parse(readFileSync(new URL("../locales/zh/main.json", import.meta.url), "utf8")).customAPI;
   assert.deepEqual(Object.keys(zh).sort(), Object.keys(en).sort());
   for (const [key, value] of Object.entries(en)) {
     assert.ok(zh[key].trim(), key);
     assert.deepEqual([...value.matchAll(/(?<!\{)\{(\w+)\}(?!\})/g)].map(m => m[1]).sort(), [...zh[key].matchAll(/(?<!\{)\{(\w+)\}(?!\})/g)].map(m => m[1]).sort(), key);
   }
+});
+
+test("custom UI translations use the official i18n endpoint and preserve custom parameter labels", async () => {
+  let locale = "en";
+  const urls = [];
+  const translations = Object.fromEntries(["en", "zh"].map(code => [code,
+    JSON.parse(readFileSync(new URL(`../locales/${code}/main.json`, import.meta.url), "utf8"))]));
+  await initializeI18n({ extensionManager: { setting: { get(id) {
+    assert.equal(id, "Comfy.Locale"); return locale;
+  } } } }, { async fetchApi(url) { urls.push(url); return { ok: true, async json() { return translations; } }; } });
+  assert.deepEqual(urls, ["/i18n"]);
+  assert.equal(t("save"), "Save");
+  locale = "zh"; refreshLanguage();
+  assert.equal(t("save"), translations.zh.customAPI.save);
+  assert.equal(parameterLabel({ name: "temperature", label: "Temperature" }), "温度");
+  assert.equal(parameterLabel({ name: "temperature", label: { en: "Temperature", zh: "legacy" } }), "温度");
+  assert.equal(parameterLabel({ name: "temperature", label: "Custom temperature label" }), "Custom temperature label");
+  locale = "en"; refreshLanguage();
+  assert.equal(parameterLabel({ name: "temperature", label: "Temperature" }), "Temperature");
 });
 
 test("model pickers filter provider, state and operation using stable IDs", () => {

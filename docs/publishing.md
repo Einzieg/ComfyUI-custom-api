@@ -24,7 +24,7 @@ Registry 是新版节点管理器的目录来源。需要在 [registry.comfy.org
 
 发布者为 `einzieg`，[Registry 节点页面](https://registry.comfy.org/nodes/comfyui-custom-api)。上传与平台审核是两个步骤；发布工作流成功不代表版本已获准安装。
 
-2026-09-09 查询时，`0.2.0` 的状态已从 `NodeVersionStatusPending` 变为 `NodeVersionStatusFlagged`；公开版本接口未提供标记原因，需要发布者在 Registry 后台查看。后续版本也需经过平台审核。若 Registry 暂时无法安装，请使用 [GitHub 最新 Release](https://github.com/Einzieg/ComfyUI-custom-api/releases/latest) 或 Git 安装。
+2026-09-10 复核时，`0.2.1` 为 `NodeVersionStatusFlagged`。公开版本列表加 `include_status_reason=true` 可查看扫描原因；[人工复核申请 #230](https://github.com/Comfy-Org/registry-backend/issues/230) 已提交。随后 Manager 维护者指出配置接口缺少独立出站白名单，0.2.2 对此增加服务器本地策略并调整官方国际化集成；应使用修复后的版本，后续版本仍需单独经过 Registry 审核。若 Registry 暂时无法安装，请使用 [GitHub 最新 Release](https://github.com/Einzieg/ComfyUI-custom-api/releases/latest) 或 Git 安装。
 
 后续发布需递增 `pyproject.toml` 的版本；已发布的版本号不可重复使用。后续文档、截图和图标更新会随下一个 Registry 版本打包；GitHub 始终显示最新文档。
 

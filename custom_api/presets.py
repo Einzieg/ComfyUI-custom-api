@@ -2,12 +2,12 @@ from copy import deepcopy
 
 
 TEXT_PARAMS = [
-    {"name": "temperature", "label": {"zh": "温度", "en": "Temperature"}, "type": "number", "default": 0.7, "min": 0, "max": 2},
-    {"name": "max_tokens", "label": {"zh": "最大输出 token", "en": "Max output tokens"}, "type": "integer", "default": 1024, "min": 1},
+    {"name": "temperature", "label": "Temperature", "type": "number", "default": 0.7, "min": 0, "max": 2},
+    {"name": "max_tokens", "label": "Max output tokens", "type": "integer", "default": 1024, "min": 1},
 ]
 IMAGE_PARAMS = [
-    {"name": "size", "label": {"zh": "图片尺寸", "en": "Image size"}, "type": "enum", "default": "1024x1024", "options": ["1024x1024", "1536x1024", "1024x1536"]},
-    {"name": "n", "label": {"zh": "生成数量", "en": "Image count"}, "type": "integer", "default": 1, "min": 1, "max": 8},
+    {"name": "size", "label": "Image size", "type": "enum", "default": "1024x1024", "options": ["1024x1024", "1536x1024", "1024x1536"]},
+    {"name": "n", "label": "Image count", "type": "integer", "default": 1, "min": 1, "max": 8},
 ]
 
 

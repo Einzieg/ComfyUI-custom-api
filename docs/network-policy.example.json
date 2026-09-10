@@ -1,0 +1,7 @@
+{
+  "allowed_origins": [
+    "https://api.openai.com",
+    "http://127.0.0.1:11434"
+  ],
+  "allowed_key_env": ["OPENAI_API_KEY"]
+}

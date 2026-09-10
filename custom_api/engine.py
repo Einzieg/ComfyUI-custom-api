@@ -7,12 +7,13 @@ import threading
 import time
 import uuid
 from collections import deque
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import urljoin
 
 import aiohttp
 
 from .errors import APIError
 from .media import MAX_IMAGE_BYTES, MAX_IMAGES, data_url, decode_image, validate_image
+from .network import parsed_url
 from .presets import request as request_spec
 from .store import redact
 from .templates import endpoint, parameters, render, render_path, select, validate_url
@@ -43,6 +44,7 @@ def compact(value, maximum=16000):
 class Engine:
     def __init__(self, store):
         self.store = store
+        self.policy = store.network_policy
         self.history = deque(maxlen=50)
         self._lock = threading.Lock()
         self._limits = {}
@@ -75,7 +77,8 @@ class Engine:
                 "mask": data_url(mask) if mask else "", "api_key": self.store.secret(provider)}
 
     def build(self, provider, spec, context):
-        url = endpoint(provider["base_url"], render_path(spec.get("path", ""), context))
+        self.policy.check_provider(provider)
+        url = self.policy.check_url(endpoint(provider["base_url"], render_path(spec.get("path", ""), context)))
         headers = render(spec.get("headers", {}), context)
         query = render(spec.get("query", {}), context)
         auth = provider.get("auth", {"type": "bearer"})
@@ -92,6 +95,7 @@ class Engine:
         query = {k: v if isinstance(v, str) else json.dumps(v) for k, v in query.items() if v is not None}
         if any(not isinstance(v, str) or "\n" in v or "\r" in v for v in headers.values()):
             raise APIError("invalid_config", "Headers must contain plain strings.")
+        self.policy.check_headers(headers)
         return {"method": spec.get("method", "POST"), "url": url, "headers": headers, "query": query,
                 "encoding": spec.get("encoding", "json"), "body": render(spec.get("body", {}), context),
                 "files": spec.get("files", [])}
@@ -155,8 +159,7 @@ class Engine:
 
     async def send(self, session, provider, spec, context, images=(), mask=None, check=None):
         built = self.build(provider, spec, context)
-        kwargs = {"headers": built["headers"], "params": built["query"],
-                  "proxy": provider.get("proxy") or None, "allow_redirects": False}
+        kwargs = {"headers": built["headers"], "params": built["query"], "allow_redirects": False}
         body = built["body"]
         if built["method"] != "GET":
             if built["encoding"] == "json":
@@ -213,19 +216,18 @@ class Engine:
         if not value.startswith(("https://", "http://")):
             return decode_image(value)
         validate_url(value)
-        base = urlsplit(provider["base_url"])
-        origin = (base.scheme, base.hostname, base.port)
+        origin = str(parsed_url(provider["base_url"]).origin())
 
         async def fetch():
-            url = value
+            url = self.policy.check_url(value)
             for _ in range(4):
-                parts = urlsplit(url)
+                url = self.policy.check_url(url)
                 headers, params = {}, {}
                 # Never send the provider key to a different image host/CDN.
-                if (parts.scheme, parts.hostname, parts.port) == origin:
+                if str(parsed_url(url).origin()) == origin:
                     auth = self.build(provider, request_spec("/", method="GET"), context)
                     headers, params = auth["headers"], auth["query"]
-                async with session.get(url, headers=headers, params=params, proxy=provider.get("proxy") or None, allow_redirects=False) as response:
+                async with session.get(url, headers=headers, params=params, allow_redirects=False) as response:
                     if response.status in (301, 302, 303, 307, 308) and response.headers.get("Location"):
                         url = validate_url(urljoin(url, response.headers["Location"]))
                         continue
@@ -249,7 +251,7 @@ class Engine:
                   "operation": operation, "status": "running", "request": safe}
         timeout = aiohttp.ClientTimeout(total=provider.get("timeout", 120), connect=20)
         try:
-            async with self.slot(provider, check), aiohttp.ClientSession(timeout=timeout, cookie_jar=aiohttp.DummyCookieJar(), trust_env=False) as session:
+            async with self.slot(provider, check), self.policy.session(timeout) as session:
                 result = await self.send(session, provider, template["request"], context, images, mask, check)
                 response_map = template["response"]
                 poll = template.get("poll")
@@ -341,7 +343,7 @@ class Engine:
         if not provider:
             raise APIError("provider_unavailable")
         context = {"api_key": self.store.secret(provider)}
-        async with self.slot(provider), aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=provider.get("timeout", 120)), cookie_jar=aiohttp.DummyCookieJar(), trust_env=False) as session:
+        async with self.slot(provider), self.policy.session(aiohttp.ClientTimeout(total=provider.get("timeout", 120))) as session:
             response = await self.send(session, provider, provider.get("models_request", request_spec("/models", method="GET")), context)
         items = select(response, provider.get("models_path", "$.data"))
         if not isinstance(items, list):

@@ -27,11 +27,11 @@ def inputs(operations, image=False):
     return result
 
 
-def localized_error(error, language):
+def node_error(error):
     from pathlib import Path
-    path = Path(__file__).resolve().parents[1] / "web" / "locales" / ("zh.json" if language == "zh" else "en.json")
+    path = Path(__file__).resolve().parents[1] / "locales" / "en" / "main.json"
     try:
-        messages = json.loads(path.read_text(encoding="utf-8"))
+        messages = json.loads(path.read_text(encoding="utf-8"))["customAPI"]
         message = messages.get("error." + error.code, error.code)
     except (OSError, ValueError):
         message = error.code
@@ -58,11 +58,6 @@ class APIBase:
             return "unavailable-" + str(runtime.store.read()["revision"])
 
     async def call(self, provider_id, model_id, operation, prompt, parameters, image=None, mask=None, system="", unique_id=None, extra_pnginfo=None, **kwargs):
-        language = "en"
-        for node in (extra_pnginfo or {}).get("workflow", {}).get("nodes", []):
-            if str(node.get("id")) == str(unique_id):
-                language = node.get("properties", {}).get("custom_api_language", "en")
-                break
         try:
             try:
                 params = json.loads(parameters)
@@ -83,7 +78,7 @@ class APIBase:
                                                 check=comfy.model_management.throw_exception_if_processing_interrupted,
                                                 progress=progress)
         except APIError as error:
-            raise localized_error(error, language) from None
+            raise node_error(error) from None
 
 
 class APIText(APIBase):

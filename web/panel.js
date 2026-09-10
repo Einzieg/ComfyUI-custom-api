@@ -88,15 +88,6 @@ export class ManagerPanel {
     this.dialog.addEventListener("cancel", event => {
       if (this.testRunning) { event.preventDefault(); this.status(t("testStillRunning")); }
     });
-    const preference = this.app.extensionManager?.setting?.get?.("CustomAPI.Language") ?? "auto";
-    const languageSelector = select(preference, ["auto", "zh", "en"].map(value => ({ value, label: t(`language.${value}`) })), value => {
-      this.action(async () => {
-        this.flushEditors();
-        await this.app.extensionManager.setting.set("CustomAPI.Language", value);
-        refreshLanguage();
-        this.render();
-      });
-    }, { "aria-label": t("language") });
     this.saveButton = button(t(this.dirty ? "saveChanges" : "save"), () => this.action(() => this.save()), "primary");
     const importInput = el("input", { type: "file", accept: ".json,application/json", hidden: true, onchange: event => {
       const file = event.target.files[0];
@@ -120,7 +111,7 @@ export class ManagerPanel {
         this.flushEditors();
         if (this.dirty) await this.save();
         downloadJSON(await this.request("/export"), "model-api-config.json"); this.status(t("exported"));
-      })), languageSelector, this.saveButton,
+      })), this.saveButton,
       button("×", () => { if (this.testRunning) this.status(t("testStillRunning")); else this.dialog.close(); }, "capi-close"), importInput);
     top.querySelector(".capi-close").setAttribute("aria-label", t("close"));
     this.sidebar = el("aside", { class: "capi-sidebar" });
@@ -188,7 +179,7 @@ export class ManagerPanel {
 
   addProvider() {
     const provider = { id: uid(), name: t("newProvider"), icon: "", base_url: "", enabled: true,
-      auth: { type: "bearer" }, timeout: 120, concurrency: 2, proxy: "", api_key_env: "",
+      auth: { type: "bearer" }, timeout: 120, concurrency: 2, api_key_env: "",
       models_request: { method: "GET", path: "/models", encoding: "json", headers: {}, query: {}, body: {}, files: [] },
       models_path: "$.data", model_id_path: "$.id", model_name_path: "$.id" };
     this.config.providers.push(provider); this.providerId = provider.id; this.tab = "provider"; this.markDirty();
@@ -206,6 +197,7 @@ export class ManagerPanel {
     }, "danger")), el("p", { text: t("providerHint") }));
     const grid = el("div", { class: "capi-grid" });
     grid.append(this.input(provider, "name", t("providerName")), this.input(provider, "base_url", "Base URL", { placeholder: "https://api.example.com/v1" }));
+    grid.append(el("small", { class: "capi-full", text: t("networkPolicyHint") }));
     const iconUpload = el("input", { type: "file", accept: "image/png,image/jpeg,image/webp", onchange: event => this.action(async () => {
       const file = event.target.files[0];
       if (!file) return;
@@ -242,8 +234,10 @@ export class ManagerPanel {
     advanced.append(el("div", { class: "capi-grid" },
       this.input(provider, "timeout", t("timeout"), { type: "number", min: 1, max: 3600 }),
       this.input(provider, "concurrency", t("concurrency"), { type: "number", min: 1, max: 32 }),
-      this.input(provider, "proxy", t("proxy"), { placeholder: "http://127.0.0.1:7890" }),
       this.input(provider, "api_key_env", t("keyEnvironment"), { placeholder: "MY_PROVIDER_API_KEY" })));
+    if (provider.proxy) advanced.append(el("p", { text: t("proxyDisabled") }), button(t("clearProxy"), () => {
+      provider.proxy = ""; this.markDirty(); this.renderContent();
+    }));
     const listing = el("details", { class: "capi-section" }, el("summary", { text: t("modelDiscovery") }),
       this.jsonInput(provider.models_request || { method: "GET", path: "/models" }, t("discoveryRequest"), value => { provider.models_request = value; }, t("templateSecrets")),
       el("div", { class: "capi-grid" }, this.input(provider, "models_path", t("modelsPath")), this.input(provider, "model_id_path", t("modelIdPath")), this.input(provider, "model_name_path", t("modelNamePath"))));

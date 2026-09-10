@@ -10,6 +10,7 @@ from pathlib import Path
 from urllib.parse import quote, quote_plus
 
 from .errors import APIError
+from .network import NetworkPolicy
 from .presets import new_config
 from .templates import endpoint, parameters, validate_url
 
@@ -71,6 +72,7 @@ def _request(spec):
     for key, val in spec.get("headers", {}).items():
         if not isinstance(val, str) or any(c in key + val for c in "\r\n"):
             raise APIError("invalid_config", "Invalid HTTP header.")
+    NetworkPolicy.check_headers(spec.get("headers", {}))
     if not isinstance(spec.get("files", []), list):
         raise APIError("invalid_config", "files must be an array.")
     for file in spec.get("files", []):
@@ -158,8 +160,9 @@ def validate(config):
 
 
 class ConfigStore:
-    def __init__(self, directory):
+    def __init__(self, directory, network_policy=None):
         self.directory = Path(directory)
+        self.network_policy = network_policy or NetworkPolicy.from_file(self.directory / "network-policy.json")
         self._lock = threading.RLock()
 
     def _read(self, name, default):
@@ -192,7 +195,8 @@ class ConfigStore:
     def secret(self, provider):
         with self._lock:
             if provider.get("api_key_env"):
-                return os.environ.get(provider["api_key_env"], "")
+                name = provider["api_key_env"]
+                return os.environ.get(name, "") if name in self.network_policy.allowed_key_env else ""
             return self._read("secrets.json", {}).get(provider["id"], "")
 
     def secrets(self):
@@ -221,6 +225,8 @@ class ConfigStore:
             config = copy.deepcopy(config)
             try:
                 validate(config)
+                for provider in config["providers"]:
+                    self.network_policy.check_provider(provider)
             except (TypeError, ValueError, KeyError, AttributeError) as exc:
                 raise APIError("invalid_config", "Invalid field type.") from exc
             credentials = self._read("secrets.json", {})
@@ -232,7 +238,7 @@ class ConfigStore:
             for p in config["providers"]:
                 p.pop("api_key", None)
                 p.pop("has_key", None)
-            values = list(credentials.values()) + [os.environ.get(p["api_key_env"], "") for p in config["providers"] if p.get("api_key_env")]
+            values = list(credentials.values()) + [self.secret(p) for p in config["providers"] if p.get("api_key_env")]
             config = protect_requests(config, values)
             validate(config)
             config["revision"] = current["revision"] + 1

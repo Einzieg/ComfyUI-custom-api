@@ -31,7 +31,7 @@
   "parameters": [
     {
       "name": "temperature",
-      "label": {"zh": "温度", "en": "Temperature"},
+      "label": "Temperature",
       "type": "number",
       "default": 0.7,
       "min": 0,

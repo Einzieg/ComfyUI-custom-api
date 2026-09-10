@@ -1,6 +1,7 @@
 import pytest
 
 from custom_api.engine import Engine
+from custom_api.network import NetworkPolicy, parsed_url
 from custom_api.presets import new_config
 from custom_api.store import ConfigStore
 from tests.mock_provider import TEST_KEY, start_provider
@@ -24,6 +25,6 @@ def provider():
 
 @pytest.fixture
 def configured(tmp_path, provider):
-    store = ConfigStore(tmp_path / "private")
+    store = ConfigStore(tmp_path / "private", NetworkPolicy([str(parsed_url(provider.url).origin())], ["CUSTOM_API_TEST_KEY"]))
     store.save(fixture_config(provider.url), {"fixture": TEST_KEY})
     return store, Engine(store), provider

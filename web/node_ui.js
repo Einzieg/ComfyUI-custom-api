@@ -1,5 +1,5 @@
 import { el, button, field, select } from "./dom.js";
-import { language, t } from "./i18n.js";
+import { parameterLabel, t } from "./i18n.js";
 import { parameterSchema, parseObject, selectableModels, selectionValues, supportedOperations } from "./client.js";
 import { brandIcon } from "./icons.js";
 
@@ -150,7 +150,7 @@ export class NodeInterface {
     try { values = parseObject(this.value("parameters")); } catch { container.append(el("small", { class: "capi-inline-error", text: t("invalidJSON") })); return; }
     const disabled = this.linked("parameters");
     for (const spec of schema) {
-      const label = typeof spec.label === "object" ? spec.label[language()] || spec.label.en || spec.name : spec.label || spec.name;
+      const label = parameterLabel(spec);
       const initial = values[spec.name] ?? spec.default ?? "";
       const update = value => {
         try { const current = parseObject(this.value("parameters")); current[spec.name] = value; this.commit({ parameters: JSON.stringify(current, null, 2) }); if (this.rawParameters) this.rawParameters.value = this.value("parameters"); }

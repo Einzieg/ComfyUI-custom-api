@@ -11,5 +11,6 @@ node_modules/
 .env.*
 !.env.example
 secrets.json
+network-policy.json
 *.pem
 *.key

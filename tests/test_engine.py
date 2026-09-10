@@ -158,6 +158,8 @@ def test_cdn_download_does_not_forward_provider_key(configured):
     from tests.mock_provider import start_provider
     store, engine, _ = configured
     cdn = start_provider()
+    from custom_api.network import NetworkPolicy, parsed_url
+    engine.policy = NetworkPolicy([*engine.policy.allowed_origins, str(parsed_url(cdn.url).origin())])
     async def download():
         p = store.read()["providers"][0]
         async with aiohttp.ClientSession() as session:
@@ -181,3 +183,24 @@ def test_binary_response_and_mask_upload(configured):
     mask = tensor_mask(torch.ones((1, 24, 32)))
     asyncio.run(engine.execute("image-model", "image_edit", images=[png()], mask=mask))
     assert any(part[0] == "mask" for part in provider.calls[-1]["body"]["fields"])
+
+
+def test_image_auth_recognizes_equivalent_default_ports(configured, monkeypatch):
+    from contextlib import asynccontextmanager
+    from types import SimpleNamespace
+    from custom_api.network import NetworkPolicy
+
+    store, engine, _ = configured
+    provider = {**store.read()["providers"][0], "base_url": "https://api.example:443/v1"}
+    engine.policy = NetworkPolicy(["https://api.example"])
+    captured = []
+    class Session:
+        @asynccontextmanager
+        async def get(self, url, **kwargs):
+            captured.append(kwargs["headers"])
+            yield SimpleNamespace(status=200, headers={})
+    async def image_bytes(response, limit):
+        return png()
+    monkeypatch.setattr(engine, "_bytes", image_bytes)
+    asyncio.run(engine.download(Session(), "https://api.example/generated.png", provider, {"api_key": TEST_KEY}))
+    assert captured == [{"Authorization": "Bearer " + TEST_KEY}]

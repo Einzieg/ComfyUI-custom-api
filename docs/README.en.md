@@ -88,6 +88,8 @@ Windows portable builds usually use `python_embeded\python.exe`. Validated with 
 
 ## Quick start
 
+Starting with **0.2.2**, the server owner must create `network-policy.json` in the private configuration directory, approve the API and image download origins, and restart ComfyUI. Outbound requests are denied by default. The web UI and configuration imports cannot change this allow-list. [Configuration example and upgrade notes](network-policy.md#english)
+
 1. **Add a provider** using **API** in the topbar or **Extensions → Model API**. Enter its Base URL and authentication.
 2. **Fetch models** with **Save & fetch models**, or add model IDs manually.
 3. **Assign templates** to the model's supported operations. Copy and edit templates for nonstandard endpoints.

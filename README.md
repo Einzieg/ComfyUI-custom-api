@@ -88,6 +88,8 @@ Windows 便携包通常使用 `python_embeded\python.exe`。已验证环境：Co
 
 ## 第一次使用
 
+从 **0.2.2** 起，先由服务器管理员在私有配置目录创建 `network-policy.json`，明确批准供应商和图片下载的地址，再重启 ComfyUI。默认拒绝全部出站请求；网页和配置导入不能修改此白名单。[配置示例与升级说明](docs/network-policy.md)
+
 1. **添加供应商**：点击顶栏 **API**，或主菜单 **Extensions → 模型 API**，填写 Base URL 和鉴权信息。
 2. **获取模型**：点击“保存并获取模型”，或手动添加模型 ID。
 3. **绑定模板**：为模型支持的操作选择模板；非标准接口可复制模板后编辑。
@@ -140,7 +142,7 @@ Windows 便携包通常使用 `python_embeded\python.exe`。已验证环境：Co
 <details>
 <summary><strong>支持哪些语言和接口？</strong></summary>
 
-界面可选择“跟随 ComfyUI / 简体中文 / English”。支持常见 HTTP JSON / 表单 / multipart 接口及异步轮询。当前不包含视频、音频、流式文本、任意脚本、cURL 导入和多步骤第三方存储上传。
+界面跟随 ComfyUI 的语言设置，基础文案为英文，中文由官方 locale 机制加载。支持常见 HTTP JSON / 表单 / multipart 接口及异步轮询。当前不包含视频、音频、流式文本、任意脚本、cURL 导入和多步骤第三方存储上传。
 
 </details>
 
