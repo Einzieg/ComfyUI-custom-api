@@ -59,7 +59,9 @@ app.registerExtension({
   async setup() {
     document.head.append(el("link", { rel: "stylesheet", href: new URL("./panel.css", import.meta.url).href }));
     await Promise.all([initializeI18n(app, api), initializeIcons()]);
-    config = await request("/config"); ready = true;
+    try { config = await request("/config"); }
+    catch (error) { if (error.code !== "management_auth_required") throw error; }
+    ready = true;
     for (const node of liveNodes) updateNode(node);
     api.addEventListener("custom-api-progress", event => {
       for (const node of liveNodes) if (String(node.id) === String(event.detail.node_id)) node._capiUI?.progress(event.detail);

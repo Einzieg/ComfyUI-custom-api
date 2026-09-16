@@ -17,6 +17,8 @@ session.trust_env = False
 
 
 def api(path, method="GET", **kwargs):
+    if path.startswith("/custom-model-api/") and path != "/custom-model-api/session":
+        kwargs.setdefault("headers", {})["X-Custom-API-Session"] = management["token"]
     response = session.request(method, BASE + path, timeout=20, **kwargs)
     response.raise_for_status()
     return response.json()
@@ -39,6 +41,8 @@ def text_inputs(**updates):
             "parameters": "{}", "cache_mode": "reuse", "request_nonce": 0, "system": "", **updates}
 
 
+management = api("/custom-model-api/session", "POST", json={}, headers={"Origin": BASE})
+api("/custom-model-api/network-policy/local", "POST", json={"origin": PROVIDER})
 config = fixture_config(PROVIDER + "/v1")
 config["revision"] = api("/custom-model-api/config")["revision"]
 api("/custom-model-api/config", "PUT", json={"config": config, "secrets": {"fixture": TEST_KEY}})

@@ -12,6 +12,8 @@
   overflow: hidden; animation: capi-enter 140ms ease-out;
 }
 .capi::backdrop { background: #080b1466; }
+.capi.capi-pairing { width: min(520px, 94vw); height: fit-content; max-height: 90vh; margin: auto; padding: 24px; overflow: auto; }
+.capi-pairing button { margin-top: 16px; margin-right: 8px; }
 .capi * { box-sizing: border-box; }
 .capi button, .capi input, .capi textarea, .capi select { font: inherit; color: inherit; }
 .capi button { cursor: pointer; background: transparent; border: 1px solid var(--ca-line); border-radius: 6px; padding: 7px 12px; transition: background 120ms, border-color 120ms; }
@@ -31,7 +33,6 @@
 .capi-top { height: 64px; padding: 0 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--ca-line); }
 .capi-brand { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 650; margin-right: auto; white-space: nowrap; }
 .capi-brand-mark { color: var(--ca-accent); font: 700 14px Consolas, monospace; border: 1px solid var(--ca-line); padding: 5px 7px; border-radius: 7px; }
-.capi-top select { width: 120px; }
 .capi-layout { display: grid; grid-template-columns: 220px 1fr; height: calc(100% - 64px); }
 .capi-sidebar { border-right: 1px solid var(--ca-line); display: flex; flex-direction: column; min-height: 0; padding: 18px 12px 14px; }
 .capi-sidebar-label { color: var(--ca-muted); padding: 0 8px 12px; font-size: 11px; letter-spacing: .05em; }
@@ -42,7 +43,6 @@
 .capi-provider-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .capi-provider-copy { min-width: 0; }
 .capi-provider small { display: block; overflow: hidden; text-overflow: ellipsis; }
-.capi-icon { flex-shrink: 0; width: 30px; height: 30px; border-radius: 7px; object-fit: contain; display: grid; place-items: center; font-size: 20px; }
 .capi-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 .capi-tabs { display: flex; border-bottom: 1px solid var(--ca-line); padding: 0 24px; flex-shrink: 0; overflow-x: auto; }
 .capi-tabs button { border: 0; border-bottom: 2px solid transparent; border-radius: 0; padding: 16px 12px 13px; white-space: nowrap; color: var(--ca-muted); }
@@ -76,15 +76,10 @@
 .capi pre { overflow: auto; max-height: 360px; white-space: pre-wrap; overflow-wrap: anywhere; padding: 14px; border-radius: 6px; background: color-mix(in srgb, var(--ca-text) 4%, transparent); }
 .capi-result-images { display: flex; flex-wrap: wrap; gap: 10px; }
 .capi-result-images img { max-width: 240px; max-height: 240px; object-fit: contain; border-radius: 6px; }
-.capi-pulse { width: 6px; height: 6px; display: inline-block; border-radius: 50%; background: var(--ca-accent); animation: capi-pulse 1s ease-in-out infinite alternate; margin-right: 8px; }
-.capi-node-picker { font: 12px/1.4 "Segoe UI", "Microsoft YaHei", sans-serif; padding: 6px; display: flex; flex-direction: column; gap: 6px; background: var(--comfy-menu-bg, #24262c); color: var(--input-text, #ddd); border-radius: 6px; }
-.capi-node-picker select, .capi-node-picker button { width: 100%; color: inherit; background: var(--comfy-input-bg, #30323a); border: 1px solid var(--border-color, #444); border-radius: 4px; padding: 5px 7px; font: inherit; }
-.capi-node-picker button { cursor: pointer; }
 .capi-node-output { width: 100%; height: 100%; resize: none; color: var(--input-text, #ddd); background: var(--comfy-input-bg, #24262c); border: 0; padding: 8px; font: 12px/1.5 "Segoe UI", sans-serif; }
 @keyframes capi-enter { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
-@keyframes capi-pulse { to { opacity: .25; } }
-@media (prefers-reduced-motion: reduce) { .capi, .capi-pulse { animation: none; } }
-@media (max-width: 780px) { .capi { width: 98vw; height: 96vh; } .capi-layout { grid-template-columns: 150px 1fr; } .capi-top { padding: 0 12px; gap: 5px; } .capi-top button { padding: 6px 8px; } .capi-brand-mark { display: none; } .capi-content { padding: 18px; } .capi-grid, .capi-template-layout { grid-template-columns: 1fr; } .capi-tabs { padding: 0 6px; } .capi-top select { width: 96px; } }
+@media (prefers-reduced-motion: reduce) { .capi { animation: none; } }
+@media (max-width: 780px) { .capi { width: 98vw; height: 96vh; } .capi-layout { grid-template-columns: 150px 1fr; } .capi-top { padding: 0 12px; gap: 5px; } .capi-top button { padding: 6px 8px; } .capi-brand-mark { display: none; } .capi-content { padding: 18px; } .capi-grid, .capi-template-layout { grid-template-columns: 1fr; } .capi-tabs { padding: 0 6px; } }
 
 .capi-node, .capi-floating {
   --ca-bg: var(--comfy-menu-bg, #252525); --ca-input: var(--comfy-input-bg, #1e1e1e);

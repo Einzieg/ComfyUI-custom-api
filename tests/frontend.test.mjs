@@ -2,9 +2,45 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { initializeI18n, parameterLabel, refreshLanguage, resolveLanguage, t } from "../web/i18n.js";
-import { modelOptions, parameterSchema, parseObject, selectableModels, selectionValues } from "../web/client.js";
+import { makeClient, parameterSchema, parseObject, selectableModels, selectionValues } from "../web/client.js";
 import { iconId } from "../web/icons.js";
 import { NodeInterface } from "../web/node_ui.js";
+
+test("management client shares local bootstrap and never sends an unauthenticated mutation", async () => {
+  const calls = [];
+  const request = makeClient({ async fetchApi(url, options) {
+    calls.push({ url, options });
+    return { ok: true, async json() { return url.endsWith("/session") ? { token: "session-only" } : {}; } };
+  } });
+  await Promise.all([request("/config"), request("/network-policy")]);
+  assert.equal(calls.filter(c => c.url.endsWith("/session")).length, 1);
+  await request("/config", "PUT", { config: {} });
+  assert.equal(calls.at(-1).options.headers["X-Custom-API-Session"], "session-only");
+  assert.equal(calls.at(-1).options.headers["Content-Type"], "application/json");
+  assert.equal(calls.at(-1).options.body, JSON.stringify({ config: {} }));
+});
+
+test("remote pairing is explicit and expired mutations are not automatically replayed", async () => {
+  let unlocked = false;
+  const calls = [];
+  const request = makeClient({ async fetchApi(url, options) {
+    calls.push({ url, options });
+    if (url.endsWith("/session")) {
+      unlocked = JSON.parse(options.body).pairing_code === "pair-code";
+      return { ok: unlocked, status: unlocked ? 200 : 401, async json() {
+        return unlocked ? { token: "session-only" } : { error: { code: "management_auth_required" } };
+      } };
+    }
+    return { ok: false, status: 401, async json() { return { error: { code: "management_auth_required" } }; } };
+  } });
+  await assert.rejects(request("/config", "PUT", {}), { code: "management_auth_required" });
+  assert.equal(calls.length, 1);
+  await request.pair("pair-code");
+  await assert.rejects(request("/test", "POST", {}), { code: "management_auth_required" });
+  assert.equal(calls.filter(c => c.url.endsWith("/test")).length, 1);
+  assert.equal(calls.at(-1).options.headers["X-Custom-API-Session"], "session-only");
+  assert.ok(!calls.at(-1).options.body.includes("pair-code"));
+});
 
 test("only the ComfyUI locale selects translations, with English fallback", () => {
   assert.equal(resolveLanguage("zh-CN"), "zh");
@@ -43,13 +79,13 @@ test("custom UI translations use the official i18n endpoint and preserve custom 
 });
 
 test("model pickers filter provider, state and operation using stable IDs", () => {
-  const config = { providers: [{ id: "a" }, { id: "b", enabled: false }], models: [
+  const config = { providers: [{ id: "a" }, { id: "b", enabled: false }], templates: [{ id: "t", kind: "text" }, { id: "i", kind: "image" }], models: [
     { id: "m1", provider_id: "a", bindings: { text: "t" } },
     { id: "m2", provider_id: "a", bindings: { image: "i" } },
     { id: "m3", provider_id: "b", bindings: { text: "t" } },
   ] };
-  assert.deepEqual(modelOptions(config, "a", "text").map(m => m.id), ["m1"]);
-  assert.deepEqual(modelOptions(config, "b", "text"), []);
+  assert.deepEqual(selectableModels(config, ["text"], "a").map(m => m.id), ["m1"]);
+  assert.deepEqual(selectableModels(config, ["text"], "b"), []);
 });
 
 test("model parameter overrides win over template defaults", () => {

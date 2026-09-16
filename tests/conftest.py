@@ -25,6 +25,6 @@ def provider():
 
 @pytest.fixture
 def configured(tmp_path, provider):
-    store = ConfigStore(tmp_path / "private", NetworkPolicy([str(parsed_url(provider.url).origin())], ["CUSTOM_API_TEST_KEY"]))
+    store = ConfigStore(tmp_path / "private", NetworkPolicy(mode="strict", allowed_origins=[str(parsed_url(provider.url).origin())], allowed_key_env=["CUSTOM_API_TEST_KEY"]))
     store.save(fixture_config(provider.url), {"fixture": TEST_KEY})
     return store, Engine(store), provider

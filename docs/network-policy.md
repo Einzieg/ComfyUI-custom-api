@@ -1,41 +1,59 @@
-# 出站网络策略（0.2.2 起）
+# 网络模式与管理访问
 
-0.2.1 的管理接口允许修改请求目标，缺少出站白名单。在配置接口可达的部署中，调用方可能借服务器访问内网服务。0.2.2 将网络许可与网页可编辑的供应商配置分开；默认拒绝全部出站请求。
+0.3.0 提供默认模式和严格模式。首次安装使用默认模式，无需创建策略文件即可调用公网 API。
 
-服务器管理员在私有目录创建 `network-policy.json`，审核内容后重启 ComfyUI。默认位置是 `ComfyUI/user/__custom_api/network-policy.json`；设置了 `COMFYUI_CUSTOM_API_DIR` 时放在该目录内。文件不能放进可由 HTTP 下载的目录。网页、导入文件、节点和工作流均不能编辑此策略，也不会从旧供应商配置自动生成许可。
+## 默认模式
 
-下面只是填写格式；只加入自己需要并信任的地址。也可参考 [JSON 示例](network-policy.example.json)。
+- 公网 HTTP(S) API、模型发现、任务轮询和公网图片 CDN 无需逐个批准。
+- 访问本地或局域网模型时，在供应商页面填写 IP 地址，例如 `http://127.0.0.1:11434/v1`，点击“允许访问此本地服务”并确认。授权只覆盖该协议、IP 和端口，不包含其他端口。
+- 本地授权独立保存，不由导入配置、工作流或模板授予。需要多个本地服务时可在“网络与访问”中查看、添加或撤销。
+- 本地服务使用 IP 字面量，不使用 `localhost` 或内网域名；域名解析到私网或混合公网/私网地址时仍会拒绝连接。
+
+## 严格模式
+
+在管理面板的“网络与访问”中选择“严格模式”，填写地址白名单并点击“保存网络设置”。仅批准的来源可被访问，包括 API、轮询、取消和图片 CDN。每项包含协议、精确主机和端口，不含路径或通配符。
+
+严格模式只使用自己的白名单；默认模式的本地服务授权不会额外放行。严格模式下的本地 IP 也需列入白名单，可在供应商页面单独授权。特殊地址无法批准。
+
+两种模式都可以通过面板配置，无需手动编辑文件或重启。保存对后续请求生效，不强制中断已建立的连接或清除已生成的缓存结果。
+
+## 管理会话
+
+仅监听回环地址的 ComfyUI，在本机通过 `127.0.0.1`、`localhost` 或 `::1` 打开时，管理面板自动建立会话。初始化检查请求来源、实际连接对端与 Host，不信任转发头。
+
+使用 `--listen 0.0.0.0`、局域网 IP 或其他非回环监听时，网页需要解锁 API 管理：读取服务器私有目录 `user/__custom_api/management-access.json` 中的 `pairing_code`，在面板中输入。自定义私有目录由 `COMFYUI_CUSTOM_API_DIR` 指定。该文件在插件加载时自动生成，持有码者拥有插件完整管理权限，包括修改网络模式和授权本地服务。
+
+配对码不会写进 URL、工作流或配置导出；浏览器仅在内存中保存运行期会话。刷新远程页面需要重新配对，服务器重启会使已有会话失效。需要轮换配对码时，关闭 ComfyUI，删除私有目录内的 `management-access.json` 后重新启动。
+
+远程管理请使用 HTTPS 或可信隧道。反向代理不自动授予本机会话，需要配对。插件的配对只保护插件管理接口，不替代 ComfyUI 整体认证，也不提供多租户隔离。可执行本地代码或控制同源插件的用户属于本机信任边界。
+
+## 始终保留的限制
+
+- DNS 在实际连接时校验，并将已验证数字 IP 交给连接器，避免第二次解析。
+- 云元数据、链路本地、未指定、组播、保留及 IPv6 过渡地址始终禁止。非标准数字 IP 表示也会拒绝。
+- 图片下载及每次重定向都校验目标；跨源下载不携带供应商密钥。
+- 禁止覆盖 Host 和代理路由头，禁用显式 HTTP 代理及环境代理，避免代理绕过目标检查。需要代理网络时使用管理员管理的可信网络隧道。
+- 从环境变量读取密钥时，在“网络与访问”中单独批准变量名。直接填写 API Key 无需此设置。
+
+策略保存在私有目录的 `network-policy.json`，不随普通配置导入导出。文件格式错误会阻止插件加载。下面是严格模式示例；默认模式不需要文件：
 
 ```json
 {
-  "allowed_origins": [
-    "https://api.openai.com",
-    "http://127.0.0.1:11434"
-  ],
-  "allowed_key_env": ["OPENAI_API_KEY"]
+  "mode": "strict",
+  "allowed_origins": ["https://api.example.com", "https://images.example.com", "http://127.0.0.1:11434"],
+  "local_origins": [],
+  "allowed_key_env": ["MY_PROVIDER_API_KEY"]
 }
 ```
 
-- 每项是完整来源：协议、精确主机和可选端口，不含 `/v1` 等路径；非默认端口必须填写。不同协议、端口或子域名需要分别批准，不支持通配符。
-- API 提交、模型发现、轮询、取消、图片 URL 和每一跳图片重定向都受限制。供应商返回另一个图片 CDN 时，也需由管理员明确批准该来源。
-- 域名在实际建连时解析，所有解析结果都必须是公网 IP。通过检查的 IP 直接交给连接器，避免检查后再次解析产生 DNS 重绑定窗口。
-- 使用本地模型服务时，明确批准其 IP 字面量和端口，例如 `http://127.0.0.1:11434`。允许显式批准的回环、RFC1918 和 IPv6 ULA 地址；域名解析到这些地址仍会被拒绝。
-- 链路本地地址（包括常见云元数据地址）、未指定地址、组播及 IPv6 过渡地址不能获准。非标准数字 IP 表示也会被拒绝。
-- 环境密钥只能读取 `allowed_key_env` 列出的名称，不填则不允许从环境变量读密钥。普通 API Key 输入框不依赖此列表。
-- 不允许覆盖 Host 或代理路由请求头。显式 HTTP 代理已禁用，以免代理代替客户端解析目标并绕过地址检查；旧供应商如保存了代理，在高级设置中点击“清除已保存的 HTTP 代理”。需要代理网络时，由管理员提供可信的网络隧道。
-
-升级后，已有供应商、模型、模板和独立密钥文件会保留；其地址获准前请求会报明确错误。修改文件需要重启，策略文件格式错误会阻止插件加载。私有策略不包含在工作流、导出配置或安装包内。
-
-白名单控制服务器可以请求的目的地。实例仍按受信任用户共享配置；对外提供 ComfyUI 时继续使用认证和访问控制。
+开发期不提供旧版迁移或兼容模式。默认模式接受任意公网目的地，比严格模式宽松；共享部署可按需要选择严格模式。
 
 ## English
 
-Version 0.2.2 fixes an SSRF boundary in earlier versions: reachable management routes could change the outbound destination without a separate allow-list. Outbound access is now denied by default.
+Version 0.3.0 has two modes. **Default** allows public HTTP(S) APIs and image CDNs without an origin allow-list. Local services need an explicit grant: enter a literal IP URL in provider settings, click **Authorize this local service**, and confirm. Grants cover exactly the scheme, IP and port. DNS names resolving to private addresses are still blocked.
 
-The server owner creates `network-policy.json` in ComfyUI's private `user/__custom_api/` directory, or the directory set by `COMFYUI_CUSTOM_API_DIR`, then restarts ComfyUI. The UI, imports and workflows cannot edit this policy or automatically approve old provider URLs. The JSON example above grants exact origins only: scheme, host and optional port, without an API path. Add only trusted API and image CDN origins that you actually need.
+**Strict** uses only its origin allow-list, including API, polling, cancellation, local IP services and image download destinations. Default-mode local grants do not bypass strict mode. Configure either mode in **Network & access**. Changes apply to subsequent requests without a restart; existing connections and cached results are not forcibly cleared.
 
-The policy covers execution, discovery, polling, cancellation, image downloads and every image redirect. DNS answers are validated at connection time and those same numeric IPs are passed to the connector. All DNS answers must be public; mixed public/private answers are rejected. Local services require an explicitly approved IP literal and port. Link-local/cloud metadata, multicast, unspecified, IPv6 transition and ambiguous numeric addresses are blocked.
+Loopback-only ComfyUI listeners automatically establish a management session for same-origin local browsers. Non-loopback listeners require the `pairing_code` from the server's private `user/__custom_api/management-access.json` (or `COMFYUI_CUSTOM_API_DIR`). The file is generated on plugin startup. A pairing code grants full plugin administration. Sessions stay in browser memory and expire on server restart; remote page refreshes require pairing again. To rotate the code, stop ComfyUI, delete that private file, then restart. Reverse-proxy access requires pairing. Use HTTPS or a trusted tunnel remotely, and protect ComfyUI itself separately.
 
-`allowed_key_env` lists the only environment variables available as API credentials. Stored API keys still work without environment variables. Host/proxy routing headers cannot be overridden. Explicit HTTP proxies are disabled because they can resolve destinations outside these checks; clear an old saved proxy from the provider's advanced settings, and use an administrator-managed network tunnel if needed.
-
-Existing provider/model/template data and key files remain intact. Requests fail with an actionable error until the server owner approves their destinations. Policy changes require a restart, and malformed policy files fail closed. The private policy file is excluded from exported configurations and installation packages. This remains a shared, trusted-user ComfyUI instance; external deployments require authentication and access control.
+DNS pinning, private/mixed DNS answer rejection, redirect checks, cross-origin credential isolation, special-address blocking and proxy restrictions remain active in both modes. API key environment-variable names need separate approval in Network & access; pasted provider keys do not. Policies and management credentials stay outside normal config imports/exports. Malformed policy files fail closed. There is no legacy compatibility mode.

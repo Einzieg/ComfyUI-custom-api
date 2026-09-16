@@ -5,6 +5,8 @@
 - 许可：[MIT](../LICENSE)，LobeHub 图标另附上游 MIT 许可。
 - 搜索名称：`ComfyUI Custom API`；Registry 包 ID：`comfyui-custom-api`。
 
+当前工作区为 **0.3.0 开发版**，新增默认/严格网络模式和管理会话。以下 0.2.x 审核记录是历史状态，不代表 0.3.0 已发布或获准；新版本需要独立复核。
+
 公开 GitHub 仓库不会自动加入 ComfyUI 的自定义节点搜索目录。
 
 ## ComfyUI-Manager

@@ -23,8 +23,6 @@ export function refreshLanguage() {
   return activeLanguage;
 }
 
-export function language() { return activeLanguage; }
-
 export function parameterLabel(spec) {
   const label = spec.label && typeof spec.label === "object" ? spec.label.en || spec.name : spec.label || spec.name;
   const key = `parameter.${spec.name}`;

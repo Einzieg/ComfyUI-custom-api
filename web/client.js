@@ -1,21 +1,34 @@
 export const ROOT = "/custom-model-api";
 
 export function makeClient(api) {
-  return async (path, method = "GET", body) => {
+  let token;
+  let pending;
+  const connect = async (pairing_code) => {
+    const response = await api.fetchApi(ROOT + "/session", { method: "POST",
+      headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pairing_code }) });
+    const result = await response.json();
+    if (!response.ok) throw result.error || new Error(`HTTP ${response.status}`);
+    token = result.token;
+  };
+  const request = async (path, method = "GET", body) => {
+    if (!token) {
+      pending ||= connect().finally(() => { pending = null; });
+      await pending;
+    }
     const response = await api.fetchApi(ROOT + path, {
       method,
-      headers: body === undefined ? {} : { "Content-Type": "application/json" },
+      headers: { "X-Custom-API-Session": token, ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
     const result = await response.json();
-    if (!response.ok) throw result.error || new Error(`HTTP ${response.status}`);
+    if (!response.ok) {
+      if (response.status === 401) token = undefined;
+      throw result.error || new Error(`HTTP ${response.status}`);
+    }
     return result;
   };
-}
-
-export function modelOptions(config, providerId, operation) {
-  const enabled = new Set(config.providers.filter(p => p.enabled !== false).map(p => p.id));
-  return config.models.filter(m => m.provider_id === providerId && m.enabled !== false && enabled.has(m.provider_id) && m.bindings?.[operation]);
+  request.pair = connect;
+  return request;
 }
 
 export function supportedOperations(config, model, allowed) {

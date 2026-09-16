@@ -26,10 +26,12 @@ Saved keys are never returned by the configuration endpoint. Workflows and PNG m
 
 This first release shares configuration within a ComfyUI instance; it does not implement multi-tenant accounts. Local key files are plaintext protected by file permissions, not encrypted storage. Use external authentication and access control for shared deployments.
 
+Version 0.3.0 allows public destinations by default, with separate local-service grants. Strict mode uses an origin allow-list. Configure modes and environment-key permissions in **Network & access**. Local-only listeners establish a management session automatically; remote access requires a pairing code. These permissions are separate from normal imports and exports. See [Network modes and management access](network-policy.md#english).
+
 ## Execution and localization
 
 The default cache mode reuses unchanged results. Change the request nonce to request another result, or select `refresh` to request every time. A nonce is not a model seed. Changing the selected provider, key, model or template invalidates the related cache. UI language is stored as presentation metadata rather than a model input.
 
-The panel and existing node displays use the plugin language preference. The node library uses ComfyUI's locale files. Custom provider/model names and model outputs remain untranslated.
+The panel and node displays follow ComfyUI's locale setting through its native locale files. Custom provider/model names and model outputs remain untranslated.
 
 Video/audio nodes, streaming, cURL import, arbitrary scripts, multi-step file storage uploads, automatic model-list pagination and restart recovery for remote tasks are outside this release.

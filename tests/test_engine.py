@@ -159,7 +159,7 @@ def test_cdn_download_does_not_forward_provider_key(configured):
     store, engine, _ = configured
     cdn = start_provider()
     from custom_api.network import NetworkPolicy, parsed_url
-    engine.policy = NetworkPolicy([*engine.policy.allowed_origins, str(parsed_url(cdn.url).origin())])
+    engine.policy = NetworkPolicy(mode="strict", allowed_origins=[*engine.policy.allowed_origins, str(parsed_url(cdn.url).origin())])
     async def download():
         p = store.read()["providers"][0]
         async with aiohttp.ClientSession() as session:
@@ -192,7 +192,7 @@ def test_image_auth_recognizes_equivalent_default_ports(configured, monkeypatch)
 
     store, engine, _ = configured
     provider = {**store.read()["providers"][0], "base_url": "https://api.example:443/v1"}
-    engine.policy = NetworkPolicy(["https://api.example"])
+    engine.policy = NetworkPolicy(mode="strict", allowed_origins=["https://api.example"])
     captured = []
     class Session:
         @asynccontextmanager

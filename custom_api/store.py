@@ -99,8 +99,6 @@ def validate(config):
                 raise APIError("invalid_config", f"{group}: name is required.")
     for p in config["providers"]:
         validate_url(p.get("base_url", ""))
-        if p.get("proxy"):
-            validate_url(p["proxy"])
         if p.get("auth", {}).get("type", "bearer") not in ("bearer", "header", "query", "none"):
             raise APIError("invalid_config", "Invalid authentication type.")
         if not 1 <= p.get("concurrency", 2) <= 32 or not 1 <= p.get("timeout", 120) <= 3600:

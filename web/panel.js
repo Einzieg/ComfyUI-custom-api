@@ -28,13 +28,30 @@ export class ManagerPanel {
         this.config = await this.request("/config");
         this.onConfig(this.config);
       }
+      this.policy = await this.request("/network-policy");
       this.context = context;
       this.providerId = context.providerId || this.providerId || this.config.providers[0]?.id;
       if (context.onSelect) { this.tab = "models"; this.editModelId = null; this.bulkOperation = context.operations[0]; }
       refreshLanguage();
       this.render();
       this.dialog.showModal();
-    } catch (error) { this.app.extensionManager?.toast?.add?.({ severity: "error", summary: t("title"), detail: errorText(error), life: 8000 }); }
+    } catch (error) {
+      if (error.code === "management_auth_required") { this.pairingDialog(context); return; }
+      this.app.extensionManager?.toast?.add?.({ severity: "error", summary: t("title"), detail: errorText(error), life: 8000 });
+    }
+  }
+
+  pairingDialog(context) {
+    const dialog = el("dialog", { class: "capi capi-pairing", "aria-label": t("pairManagement") });
+    const code = el("input", { type: "password", autocomplete: "off", "aria-label": t("pairingCode") });
+    const status = el("p", { role: "status" });
+    dialog.append(el("h2", { text: t("pairManagement") }), el("p", { text: t("pairingHint") }), field(t("pairingCode"), code), status,
+      button(t("pairManagement"), async () => {
+        try { await this.request.pair(code.value.trim()); dialog.close(); await this.open(context); }
+        catch (error) { status.textContent = errorText(error); }
+      }, "primary"), button(t("close"), () => dialog.close()));
+    dialog.addEventListener("close", () => dialog.remove());
+    document.body.append(dialog); dialog.showModal(); code.focus();
   }
 
   status(message, error = false) {
@@ -140,7 +157,7 @@ export class ManagerPanel {
   }
 
   renderContent() {
-    this.tabs.replaceChildren(...["models", "provider", "templates", "test", "history"].map(tab =>
+    this.tabs.replaceChildren(...["models", "provider", "templates", "test", "history", "network"].map(tab =>
       button(t(`tab.${tab}`), () => this.navigate(() => { this.tab = tab; }), tab === this.tab ? "active" : "")));
     this.content.replaceChildren();
     const provider = this.config.providers.find(p => p.id === this.providerId);
@@ -153,7 +170,27 @@ export class ManagerPanel {
     else if (this.tab === "models") this.modelList(provider);
     else if (this.tab === "templates") this.templateEditor();
     else if (this.tab === "test") this.testForm();
+    else if (this.tab === "network") this.networkForm();
     else this.showHistory();
+  }
+
+  networkForm() {
+    const draft = structuredClone(this.policy);
+    const mode = select(draft.mode, ["default", "strict"].map(value => ({ value, label: t(`networkMode.${value}`) })), value => {
+      draft.mode = value; lists[0].hidden = value !== "default"; lists[1].hidden = value !== "strict";
+    }, { "aria-label": t("networkMode") });
+    const lists = ["local_origins", "allowed_origins", "allowed_key_env"].map(key => {
+      const input = el("textarea", { rows: 3, value: draft[key].join("\n"), spellcheck: false, "aria-label": t(`network.${key}`),
+        oninput: event => { draft[key] = event.target.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean); } });
+      const wrapper = el("div", {}, field(t(`network.${key}`), input, t(`network.${key}Hint`)));
+      wrapper.hidden = key === "local_origins" ? draft.mode !== "default" : key === "allowed_origins" && draft.mode !== "strict";
+      return wrapper;
+    });
+    this.content.append(el("h2", { text: t("network") }), el("p", { text: t("networkModesHint") }), field(t("networkMode"), mode), ...lists,
+      button(t("saveNetwork"), () => this.action(async () => {
+        this.policy = await this.request("/network-policy", "PUT", draft);
+        this.status(t("networkSaved")); this.renderContent();
+      }), "primary"));
   }
 
   input(object, key, label, options = {}) {
@@ -198,6 +235,12 @@ export class ManagerPanel {
     const grid = el("div", { class: "capi-grid" });
     grid.append(this.input(provider, "name", t("providerName")), this.input(provider, "base_url", "Base URL", { placeholder: "https://api.example.com/v1" }));
     grid.append(el("small", { class: "capi-full", text: t("networkPolicyHint") }));
+    grid.append(button(t("authorizeLocal"), () => this.action(async () => {
+      const origin = new URL(provider.base_url).origin;
+      if (!confirm(t("authorizeLocalConfirm", { origin }))) return;
+      this.policy = await this.request("/network-policy/local", "POST", { origin });
+      this.status(t("networkSaved"));
+    })));
     const iconUpload = el("input", { type: "file", accept: "image/png,image/jpeg,image/webp", onchange: event => this.action(async () => {
       const file = event.target.files[0];
       if (!file) return;
@@ -235,9 +278,6 @@ export class ManagerPanel {
       this.input(provider, "timeout", t("timeout"), { type: "number", min: 1, max: 3600 }),
       this.input(provider, "concurrency", t("concurrency"), { type: "number", min: 1, max: 32 }),
       this.input(provider, "api_key_env", t("keyEnvironment"), { placeholder: "MY_PROVIDER_API_KEY" })));
-    if (provider.proxy) advanced.append(el("p", { text: t("proxyDisabled") }), button(t("clearProxy"), () => {
-      provider.proxy = ""; this.markDirty(); this.renderContent();
-    }));
     const listing = el("details", { class: "capi-section" }, el("summary", { text: t("modelDiscovery") }),
       this.jsonInput(provider.models_request || { method: "GET", path: "/models" }, t("discoveryRequest"), value => { provider.models_request = value; }, t("templateSecrets")),
       el("div", { class: "capi-grid" }, this.input(provider, "models_path", t("modelsPath")), this.input(provider, "model_id_path", t("modelIdPath")), this.input(provider, "model_name_path", t("modelNamePath"))));

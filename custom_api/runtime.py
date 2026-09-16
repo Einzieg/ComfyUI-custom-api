@@ -12,9 +12,7 @@ def config_directory():
         import folder_paths
     except ImportError:
         return Path(__file__).resolve().parents[1] / "data"
-    if hasattr(folder_paths, "get_system_user_directory"):
-        return Path(folder_paths.get_system_user_directory("custom_api"))
-    return Path(folder_paths.get_user_directory()).parent / "custom-api-private"
+    return Path(folder_paths.get_system_user_directory("custom_api"))
 
 
 store = ConfigStore(config_directory())

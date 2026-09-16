@@ -21,6 +21,9 @@ def test_management_routes_and_debug_jobs(configured):
         root = f"http://127.0.0.1:{site._server.sockets[0].getsockname()[1]}/custom-model-api"
         try:
             async with ClientSession() as client:
+                code = json.loads((store.directory / "management-access.json").read_text(encoding="utf-8"))["pairing_code"]
+                async with client.post(root + "/session", json={"pairing_code": code}) as response:
+                    client.headers["X-Custom-API-Session"] = (await response.json())["token"]
                 async with client.get(root + "/config") as response:
                     public = await response.json()
                     assert response.headers["Cache-Control"] == "no-store"

@@ -1,7 +1,6 @@
 {
-  "allowed_origins": [
-    "https://api.openai.com",
-    "http://127.0.0.1:11434"
-  ],
-  "allowed_key_env": ["OPENAI_API_KEY"]
+  "mode": "strict",
+  "allowed_origins": ["https://api.example.com", "https://images.example.com", "http://127.0.0.1:11434"],
+  "local_origins": [],
+  "allowed_key_env": ["MY_PROVIDER_API_KEY"]
 }

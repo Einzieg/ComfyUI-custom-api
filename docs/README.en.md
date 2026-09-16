@@ -88,7 +88,7 @@ Windows portable builds usually use `python_embeded\python.exe`. Validated with 
 
 ## Quick start
 
-Starting with **0.2.2**, the server owner must create `network-policy.json` in the private configuration directory, approve the API and image download origins, and restart ComfyUI. Outbound requests are denied by default. The web UI and configuration imports cannot change this allow-list. [Configuration example and upgrade notes](network-policy.md#english)
+**0.3.0 development:** public APIs work by default without a manually maintained allow-list. Authorize local services separately in provider settings; choose strict mode in Network & access for shared deployments. Loopback-only servers establish management sessions automatically; remote access requires a pairing code. [Network modes and management access](network-policy.md#english)
 
 1. **Add a provider** using **API** in the topbar or **Extensions → Model API**. Enter its Base URL and authentication.
 2. **Fetch models** with **Save & fetch models**, or add model IDs manually.
@@ -120,7 +120,7 @@ Images connect to `PreviewImage` or `SaveImage`, preserving different sizes in o
 
 - [Usage guide](usage.en.md): request parameters, configuration, caching, localization and limitations.
 - [Template examples](templates.md): variables, request formats and response extraction.
-- [Validation](validation.md): **33 backend tests + 9 frontend tests**, plus real ComfyUI workflow checks.
+- [Validation](validation.md): backend and frontend automated tests, plus real ComfyUI workflow checks.
 - [Publishing](publishing.md): Registry, Manager and maintainer release steps.
 
 Keys are stored separately under `user/__custom_api/secrets.json` or read from configured environment variables. Local key files are plaintext protected by file permissions. Configuration is shared within a ComfyUI instance; there is no multi-tenant isolation.

@@ -23,9 +23,9 @@ from tests.mock_provider import start_provider
 ])
 def test_unapproved_origins_fail_closed(url):
     with pytest.raises(APIError, match="network_origin_blocked"):
-        NetworkPolicy(["https://api.example"]).check_url(url)
+        NetworkPolicy(mode="strict", allowed_origins=["https://api.example"]).check_url(url)
     with pytest.raises(APIError):
-        NetworkPolicy().check_url(url)
+        NetworkPolicy(mode="strict").check_url(url)
 
 
 @pytest.mark.parametrize("url", [
@@ -35,7 +35,7 @@ def test_unapproved_origins_fail_closed(url):
 ])
 def test_metadata_and_special_addresses_cannot_be_approved(url):
     with pytest.raises(APIError, match="network_address_blocked"):
-        NetworkPolicy([url])
+        NetworkPolicy(mode="strict", allowed_origins=[url])
 
 
 @pytest.mark.parametrize("url", [
@@ -46,12 +46,12 @@ def test_metadata_and_special_addresses_cannot_be_approved(url):
 ])
 def test_ambiguous_or_wildcard_allowlist_entries_rejected(url):
     with pytest.raises(APIError):
-        NetworkPolicy([url])
+        NetworkPolicy(mode="strict", allowed_origins=[url])
 
 
 def test_local_services_require_an_explicit_ip_and_port(provider):
     origin = str(parsed_url(provider.url).origin())
-    policy = NetworkPolicy([origin])
+    policy = NetworkPolicy(mode="strict", allowed_origins=[origin])
     assert policy.check_url(provider.url) == provider.url
     with pytest.raises(APIError):
         policy.check_url("http://127.0.0.1:8188")
@@ -88,14 +88,15 @@ def test_dns_answers_are_checked_before_connection(monkeypatch, addresses):
     asyncio.run(scenario())
 
 
-def test_dns_results_are_pinned_and_rebinding_is_rechecked(monkeypatch):
+@pytest.mark.parametrize("mode", ["default", "strict"])
+def test_dns_results_are_pinned_and_rebinding_is_rechecked(monkeypatch, mode):
     async def scenario():
         calls = []
         async def answers(host, port, **kwargs):
             calls.append(host)
             return [dns_answer("8.8.8.8" if len(calls) == 1 else "127.0.0.1", port)]
         monkeypatch.setattr(asyncio.get_running_loop(), "getaddrinfo", answers)
-        async with NetworkPolicy(["https://approved.example"]).session(aiohttp.ClientTimeout(total=2)) as session:
+        async with NetworkPolicy(mode=mode, allowed_origins=["https://approved.example"]).session(aiohttp.ClientTimeout(total=2)) as session:
             results = await session.connector._resolve_host("approved.example", 443)
             assert len(calls) == 1
             assert results[0]["host"] == "8.8.8.8"
@@ -106,11 +107,11 @@ def test_dns_results_are_pinned_and_rebinding_is_rechecked(monkeypatch):
     asyncio.run(scenario())
 
 
-def test_config_import_and_legacy_execution_cannot_authorize_an_internal_host(configured, tmp_path):
+def test_config_import_and_disk_execution_cannot_authorize_an_internal_host(configured, tmp_path):
     store, _, permitted = configured
     target = start_provider()
     policy_path = store.directory / "network-policy.json"
-    original_policy = json.dumps({"allowed_origins": list(store.network_policy.allowed_origins)})
+    original_policy = json.dumps(store.network_policy.as_dict())
     policy_path.write_text(original_policy, encoding="utf-8")
     store = ConfigStore(store.directory)
     engine = Engine(store)
@@ -131,6 +132,9 @@ def test_config_import_and_legacy_execution_cannot_authorize_an_internal_host(co
         root = f"http://127.0.0.1:{site._server.sockets[0].getsockname()[1]}/custom-model-api"
         try:
             async with aiohttp.ClientSession() as client:
+                code = json.loads((store.directory / "management-access.json").read_text(encoding="utf-8"))["pairing_code"]
+                async with client.post(root + "/session", json={"pairing_code": code}) as response:
+                    client.headers["X-Custom-API-Session"] = (await response.json())["token"]
                 # A direct HTTP client sends no browser Origin header.
                 for method, path, body in (("PUT", "/config", {"config": malicious}), ("POST", "/import", {"config": malicious})):
                     async with client.request(method, root + path, json=body) as response:
@@ -138,7 +142,7 @@ def test_config_import_and_legacy_execution_cannot_authorize_an_internal_host(co
                         assert (await response.json())["error"]["code"] == "network_origin_blocked"
                 assert store.read()["providers"][0]["base_url"] == permitted.url
                 assert policy_path.read_text(encoding="utf-8") == original_policy
-                # Simulate a config stored before the upgrade; execution still validates it.
+                # Disk configuration cannot bypass the independent execution policy.
                 (store.directory / "config.json").write_text(json.dumps(malicious), encoding="utf-8")
                 for action in (engine.execute("text-model", "text"), engine.discover("fixture")):
                     with pytest.raises(APIError, match="network_origin_blocked"):
@@ -189,7 +193,7 @@ def test_unapproved_image_url_and_dns_alias_never_reach_target(configured, monke
             with pytest.raises(APIError, match="network_origin_blocked"):
                 await engine.download(session, target.url.replace("/v1", "/image.png"), store.read()["providers"][0], {})
         alias = f"http://approved.example:{target.server_port}"
-        policy = NetworkPolicy([alias])
+        policy = NetworkPolicy(mode="strict", allowed_origins=[alias])
         engine.policy = policy
         async def answers(host, port, **kwargs):
             return [dns_answer("127.0.0.1", port)]

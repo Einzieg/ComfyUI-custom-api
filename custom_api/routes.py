@@ -4,29 +4,30 @@ import functools
 import json
 import time
 import uuid
-from urllib.parse import urlsplit
 
 from aiohttp import web
 
 from .errors import APIError
+from .access import ManagementAccess
+from .network import NetworkPolicy
 from .media import decode_image, preview_url
 from .store import redact
 
 PREFIX = "/custom-model-api"
 
 
-def register_routes(routes, store, engine):
+def register_routes(routes, store, engine, *, local_session=False):
     jobs = {}
+    access = ManagementAccess(store, local_session)
 
     def route(method, path):
         def decorate(fn):
             @functools.wraps(fn)
             async def handler(request):
                 try:
-                    # JSON-only mutations and same-origin checks prevent browser form/CSRF requests.
-                    origin = request.headers.get("Origin")
-                    if origin and urlsplit(origin).netloc != request.host:
-                        raise APIError("forbidden_origin", status=403)
+                    access.check_origin(request)
+                    if path != "/session":
+                        access.authenticate(request)
                     if method != "GET" and request.content_type != "application/json":
                         raise APIError("invalid_request", "Expected application/json.", 415)
                     response = await fn(request)
@@ -49,6 +50,38 @@ def register_routes(routes, store, engine):
         if not isinstance(value, dict):
             raise APIError("invalid_request")
         return value
+
+    @route("POST", "/session")
+    async def session(request):
+        return web.json_response(access.create_session(request, await payload(request)))
+
+    @route("GET", "/network-policy")
+    async def get_policy(request):
+        return web.json_response(store.network_policy.as_dict())
+
+    @route("PUT", "/network-policy")
+    async def put_policy(request):
+        policy = NetworkPolicy.from_dict(await payload(request))
+        with store._lock:
+            store._write("network-policy.json", policy.as_dict())
+            store.network_policy = policy
+            engine.policy = policy
+        return web.json_response(policy.as_dict())
+
+    @route("POST", "/network-policy/local")
+    async def approve_local(request):
+        origin = (await payload(request)).get("origin")
+        # Validate as a local IP even in strict mode; never approve an arbitrary URL here.
+        grant = NetworkPolicy(local_origins=[origin]).local_origins
+        with store._lock:
+            value = store.network_policy.as_dict()
+            key = "allowed_origins" if value["mode"] == "strict" else "local_origins"
+            value[key] = sorted(set(value[key]) | grant)
+            policy = NetworkPolicy.from_dict(value)
+            store._write("network-policy.json", policy.as_dict())
+            store.network_policy = policy
+            engine.policy = policy
+        return web.json_response(policy.as_dict())
 
     @route("GET", "/config")
     async def get_config(request):

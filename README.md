@@ -36,7 +36,7 @@
 
 ### 模型管理
 
-在一个面板中管理多个供应商，搜索模型并为支持的操作绑定模板。内置 **322 个 LobeHub 品牌图标**，随插件本地加载。
+在一个面板中管理多个供应商，搜索模型并为支持的操作绑定模板。内置 **322 个 品牌图标**，随插件本地加载。
 
 ![供应商与模型管理实机截图](docs/assets/models.png)
 
@@ -88,7 +88,7 @@ Windows 便携包通常使用 `python_embeded\python.exe`。已验证环境：Co
 
 ## 第一次使用
 
-从 **0.2.2** 起，先由服务器管理员在私有配置目录创建 `network-policy.json`，明确批准供应商和图片下载的地址，再重启 ComfyUI。默认拒绝全部出站请求；网页和配置导入不能修改此白名单。[配置示例与升级说明](docs/network-policy.md)
+**0.3.0 开发版**默认允许公网 API，无需手动维护白名单。本地模型服务在供应商页面单独授权；共享部署可在“网络与访问”切换严格模式。仅监听本机时自动建立管理会话，远程访问需要管理配对码。[网络模式与管理访问](docs/network-policy.md)
 
 1. **添加供应商**：点击顶栏 **API**，或主菜单 **Extensions → 模型 API**，填写 Base URL 和鉴权信息。
 2. **获取模型**：点击“保存并获取模型”，或手动添加模型 ID。
@@ -150,7 +150,7 @@ Windows 便携包通常使用 `python_embeded\python.exe`。已验证环境：Co
 
 - [完整使用指南](docs/usage.md)：节点操作、参数、缓存、遮罩、语言和密钥。
 - [请求模板说明](docs/templates.md)：变量、请求格式和响应提取示例。
-- [验证记录](docs/validation.md)：**33 项后端测试 + 9 项前端测试**，以及真实 ComfyUI 工作流验证。
+- [验证记录](docs/validation.md)：后端、前端自动化测试，以及真实 ComfyUI 工作流验证。
 - [发布与收录](docs/publishing.md)：Registry、Manager 和维护者发布流程。
 
 开发需要 Python、PyTorch、`pytest`、`requirements.txt` 中的依赖，以及 Node.js 22+。运行 `python -m pytest -q` 和 `node --test tests/frontend.test.mjs` 执行测试；`scripts/package.py` 构建安装包，需要 Python 3.11+。测试使用本地模拟供应商，不会调用收费模型。

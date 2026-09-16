@@ -75,7 +75,9 @@ class PublicResolver(aiohttp.abc.AbstractResolver):
 
 
 class NetworkPolicy:
-    def __init__(self, allowed_origins=(), allowed_key_env=()):
+    def __init__(self, allowed_origins=(), allowed_key_env=(), *, mode="default", local_origins=()):
+        if mode not in ("default", "strict"):
+            raise APIError("network_policy_invalid", "Expected default or strict mode.")
         origins = set()
         for value in allowed_origins:
             url = parsed_url(value)
@@ -92,6 +94,31 @@ class NetworkPolicy:
             raise APIError("network_policy_invalid", "Invalid environment-variable allow-list.", 500)
         self.allowed_origins = frozenset(origins)
         self.allowed_key_env = frozenset(allowed_key_env)
+        self.mode = mode
+        local = set()
+        for value in local_origins:
+            url = parsed_url(value)
+            try:
+                address = checked_address(url.raw_host, explicit=True)
+            except ValueError as exc:
+                raise APIError("network_policy_invalid", "Local services require an explicit IP address, not a hostname.") from exc
+            if address.is_global or url.path not in ("", "/") or url.query_string:
+                raise APIError("network_policy_invalid", "Local grants require a local IP origin and exact port.")
+            local.add(str(url.origin()))
+        self.local_origins = frozenset(local)
+
+    def as_dict(self):
+        return {"mode": self.mode, "allowed_origins": sorted(self.allowed_origins),
+                "local_origins": sorted(self.local_origins), "allowed_key_env": sorted(self.allowed_key_env)}
+
+    @classmethod
+    def from_dict(cls, value):
+        if not isinstance(value, dict) or set(value) - {"mode", "allowed_origins", "local_origins", "allowed_key_env"}:
+            raise APIError("network_policy_invalid", "Unknown network policy field.")
+        if any(not isinstance(value.get(key, []), list) for key in ("allowed_origins", "local_origins", "allowed_key_env")):
+            raise APIError("network_policy_invalid", "Policy lists must be arrays.")
+        return cls(value.get("allowed_origins", []), value.get("allowed_key_env", []),
+                   mode=value.get("mode", "default"), local_origins=value.get("local_origins", []))
 
     @classmethod
     def from_file(cls, path):
@@ -100,32 +127,29 @@ class NetworkPolicy:
             return cls()
         try:
             value = json.loads(path.read_text(encoding="utf-8-sig"))
-            if not isinstance(value, dict) or set(value) - {"allowed_origins", "allowed_key_env"}:
-                raise ValueError()
-            if any(not isinstance(value.get(key, []), list) for key in ("allowed_origins", "allowed_key_env")):
-                raise ValueError()
-            return cls(value.get("allowed_origins", []), value.get("allowed_key_env", []))
+            return cls.from_dict(value)
         except (OSError, ValueError, TypeError, APIError) as exc:
             raise APIError("network_policy_invalid", "Check the local network-policy.json file and restart ComfyUI.", 500) from exc
 
     def check_url(self, value):
         url = parsed_url(value)
-        if str(url.origin()) not in self.allowed_origins:
-            raise APIError("network_origin_blocked", f"Approve {url.origin()} in the local network-policy.json file and restart ComfyUI.", 403)
+        origin = str(url.origin())
+        if self.mode == "strict" and origin not in self.allowed_origins:
+            raise APIError("network_origin_blocked", f"Approve {origin} in Network & access (strict mode).", 403)
         try:
             ipaddress.ip_address(url.raw_host)
         except ValueError:
             pass  # DNS results are checked by PublicResolver at connection time.
         else:
-            checked_address(url.raw_host, explicit=True)
+            checked_address(url.raw_host, explicit=origin in (self.allowed_origins if self.mode == "strict" else self.local_origins))
         return str(url)
 
     def check_provider(self, provider):
         self.check_url(provider.get("base_url", ""))
         if provider.get("proxy"):
-            raise APIError("network_proxy_blocked", "Clear the saved HTTP proxy. Explicit proxies bypass destination DNS validation.", 403)
+            raise APIError("network_proxy_blocked", "Explicit HTTP proxies are not supported: they bypass destination DNS validation.", 403)
         if provider.get("api_key_env") and provider["api_key_env"] not in self.allowed_key_env:
-            raise APIError("network_key_env_blocked", "Approve the API key variable in the local network-policy.json file.", 403)
+            raise APIError("network_key_env_blocked", "Approve the API key variable in Network & access.", 403)
 
     @staticmethod
     def check_headers(headers):
