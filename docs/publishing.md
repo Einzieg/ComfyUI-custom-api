@@ -11,9 +11,11 @@
 
 ## ComfyUI-Manager
 
-按[官方收录流程](https://github.com/Comfy-Org/ComfyUI-Manager#how-to-register-your-custom-node-into-comfyui-manager)，向 `custom-node-list.json` 添加条目并提交 PR。PR 合并、远程目录更新后，可在 Manager 的 **Custom Nodes** 中搜索 `ComfyUI Custom API`。列表仍旧时刷新目录；旧版 Manager 可选择 `Channel (remote)`。
+**已于 2026-09-22 收录到 ComfyUI-Manager 默认目录。** 在 Manager 的 **Custom Nodes** 中搜索 `ComfyUI Custom API` 即可安装。列表仍旧时刷新目录；旧版 Manager 可选择 `Channel (remote)`。
 
-已提交 [收录 PR #3258](https://github.com/Comfy-Org/ComfyUI-Manager/pull/3258)，目前等待合并。上游 JSON 校验通过；真实 ComfyUI 0.35.0 / Manager 3.41 的本地目录接口返回 HTTP 200，并找到唯一对应条目。审核期间可从 GitHub 克隆或使用发布 ZIP 安装。
+维护者已直接将条目写入上游 `custom-node-list.json`，并关闭 [PR #3258](https://github.com/Comfy-Org/ComfyUI-Manager/pull/3258)，避免因目录冲突重复添加；这不是拒绝收录。[维护者确认](https://github.com/Comfy-Org/ComfyUI-Manager/pull/3258#issuecomment-5777024042)。当日核对上游默认目录，存在且仅存在一个对应条目。
+
+Manager 收录与 Comfy Registry 版本审核相互独立，前者完成不代表后者通过。也可继续使用 Git 或 GitHub Release ZIP 安装。
 
 ## Comfy Registry
 

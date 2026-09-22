@@ -60,7 +60,7 @@
 搜索 **`comfyui-custom-api`** 或 **`ComfyUI Custom API`**。
 
 - [Comfy Registry](https://registry.comfy.org/nodes/comfyui-custom-api)：已创建条目，可安装版本受平台审核状态影响。
-- 旧版 Manager 默认目录：[收录 PR #3258](https://github.com/Comfy-Org/ComfyUI-Manager/pull/3258) 等待合并。
+- ComfyUI-Manager 默认目录：**已收录**，刷新目录后搜索并安装。[维护者确认](https://github.com/Comfy-Org/ComfyUI-Manager/pull/3258#issuecomment-5777024042)。
 
 若目录尚未刷新或暂时无法安装，可使用下面的 Git / ZIP 方式。[查看收录状态与发布说明 →](docs/publishing.md)
 

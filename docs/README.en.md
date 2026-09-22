@@ -60,7 +60,7 @@ Search the local icon library or match icons from provider names automatically.
 Search for **`comfyui-custom-api`** or **`ComfyUI Custom API`**.
 
 - [Comfy Registry](https://registry.comfy.org/nodes/comfyui-custom-api): listed; installable versions depend on platform review.
-- Legacy Manager catalog: [inclusion PR #3258](https://github.com/Comfy-Org/ComfyUI-Manager/pull/3258) awaits merging.
+- ComfyUI-Manager default catalog: **listed**. Refresh the catalog, then search and install. [Maintainer confirmation](https://github.com/Comfy-Org/ComfyUI-Manager/pull/3258#issuecomment-5777024042).
 
 If the catalog has not refreshed or installation is unavailable, use Git or the release ZIP. [Publishing status →](publishing.md)
 
